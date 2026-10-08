@@ -54,6 +54,8 @@ jobs:
           printf '%s\n' "$DREAMHOST_SSH_KEY" > "$HOME/.ssh/id_ed25519"
           printf '%s\n' "$DREAMHOST_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+          ssh-keygen -y -f "$HOME/.ssh/id_ed25519" > "$RUNNER_TEMP/deploy-key.pub"
+          echo "Deployment key fingerprint: $(ssh-keygen -lf "$RUNNER_TEMP/deploy-key.pub" -E sha256 | awk '{print $2}')"
 
       - name: Publish site folder to DreamHost
         if: github.event_name != 'pull_request' && steps.dreamhost.outputs.ready == 'true'
@@ -62,7 +64,7 @@ jobs:
           port="${DREAMHOST_PORT:-22}"
           rsync -rlptDz --delete-after \
             --exclude='.well-known/' \
-            -e "ssh -i $HOME/.ssh/id_ed25519 -p $port" \
+            -e "ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=15 -i $HOME/.ssh/id_ed25519 -p $port" \
             site/ "$DREAMHOST_USER@$DREAMHOST_HOST:$DREAMHOST_PATH/"
           echo "### Published to DreamHost" >> "$GITHUB_STEP_SUMMARY"
           echo "The checked contents of \`site/\` were uploaded to \`$DREAMHOST_PATH\`." >> "$GITHUB_STEP_SUMMARY"
