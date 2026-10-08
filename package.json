@@ -1,0 +1,11 @@
+{
+  "name": "rustin-coziahr-com",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rustin's personal landing page and design playground.",
+  "scripts": {
+    "preview": "node tools/preview.mjs",
+    "check": "node tools/validate.mjs"
+  }
+}
+
