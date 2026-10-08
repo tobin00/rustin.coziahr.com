@@ -2,7 +2,7 @@
 window.RUSTIN_SITE = {
   eyebrow: "Hello from my corner of the internet",
   firstName: "Rustin",
-  lastName: " Cozi Ahr",
+  lastName: " Coziahr",
   intro: "A place for the things I’m making, playing, learning, and enjoying along the way.",
   footer: "Made with curiosity and probably revised a few times.",
   hobbies: [
