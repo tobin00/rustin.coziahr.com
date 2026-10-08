@@ -15,6 +15,8 @@ Rustin: open this folder in Codex/ChatGPT and describe what you want in everyday
 
 The detailed beginner guide is in [docs/HOW_TO_EDIT.md](docs/HOW_TO_EDIT.md).
 
+Setting up a new Windows laptop? Start with [docs/LAPTOP_SETUP.md](docs/LAPTOP_SETUP.md), then double-click `CHECK_SETUP.cmd` after cloning the repository.
+
 ## How the site is organized
 
 - `site/index.html` — the live homepage
@@ -23,6 +25,7 @@ The detailed beginner guide is in [docs/HOW_TO_EDIT.md](docs/HOW_TO_EDIT.md).
 - `site/assets/content.js` — Rustin's words, hobbies, and social links
 - `site/assets/styles.css` — all visual designs
 - `AGENTS.md` — safety instructions that coding assistants automatically read
+- `CHECK_SETUP.cmd` — a read-only laptop prerequisite check
 - `.github/workflows/deploy-dreamhost.yml` — checks the site and securely publishes it to DreamHost
 
 ## Preview and check

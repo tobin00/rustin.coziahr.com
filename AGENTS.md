@@ -14,6 +14,7 @@ This repository belongs to Rustin, who is not a software engineer. Be warm, use 
 8. Before saying a change is finished, run `npm run check`. If possible, also run `npm run preview` and inspect both `/` and `/testing/` at desktop and mobile widths.
 9. Explain what changed without jargon. Mention whether the checks passed.
 10. Do not commit or push unless Rustin asks. If he asks to publish, commit only the intended files, push to `main`, and explain that GitHub securely copies the site to DreamHost automatically.
+11. For laptop setup or prerequisite problems, read `docs/LAPTOP_SETUP.md` and run `tools/setup-check.ps1`. The checker is diagnostic; do not weaken or skip a failed check just to report success.
 
 ## Design safety
 
@@ -30,4 +31,5 @@ This repository belongs to Rustin, who is not a software engineer. Be warm, use 
 - “Update testing option 2” → edit only the Design 2 section in `site/assets/styles.css` unless structure must change.
 - “Make option 4 live” → set `data-design="4"` in `site/index.html`, run checks, then show Rustin the result.
 - “Publish this” → run checks, review the changed files, commit, push to `main`, and confirm that the DreamHost upload step—not only the check step—completed.
+- “Am I set up?” → run `powershell -NoProfile -ExecutionPolicy Bypass -File tools/setup-check.ps1` and help resolve every ACTION item.
 
