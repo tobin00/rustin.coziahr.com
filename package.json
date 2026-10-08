@@ -5,7 +5,8 @@
   "description": "Rustin's personal landing page and design playground.",
   "scripts": {
     "preview": "node tools/preview.mjs",
-    "check": "node tools/validate.mjs"
+    "check": "node tools/validate.mjs",
+    "build": "node tools/build.mjs"
   }
 }
 

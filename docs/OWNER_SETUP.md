@@ -47,7 +47,7 @@ Open **Actions → Check and publish website → Run workflow**. A successful ru
 
 If the last two steps are skipped, one or more secrets are missing. A green check by itself only proves that the website files passed validation.
 
-The upload synchronizes the contents of `site/` into the DreamHost website directory. Files removed from `site/` are also removed from the public directory, except DreamHost's `.well-known` directory used by hosting infrastructure.
+The workflow builds a cache-safe copy of `site/` and synchronizes it into the DreamHost website directory. Files removed from `site/` are also removed from the public directory, except DreamHost's `.well-known` directory used by hosting infrastructure.
 
 ## 5. Enable HTTPS and collaboration
 

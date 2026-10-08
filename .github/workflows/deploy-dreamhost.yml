@@ -28,6 +28,9 @@ jobs:
       - name: Check website
         run: node tools/validate.mjs
 
+      - name: Build cache-safe website
+        run: node tools/build.mjs
+
       - name: Check DreamHost connection settings
         if: github.event_name != 'pull_request'
         id: dreamhost
@@ -65,7 +68,7 @@ jobs:
           rsync -rlptDz --delete-after \
             --exclude='.well-known/' \
             -e "ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=15 -i $HOME/.ssh/id_ed25519 -p $port" \
-            site/ "$DREAMHOST_USER@$DREAMHOST_HOST:$DREAMHOST_PATH/"
+            dist/ "$DREAMHOST_USER@$DREAMHOST_HOST:$DREAMHOST_PATH/"
           echo "### Published to DreamHost" >> "$GITHUB_STEP_SUMMARY"
-          echo "The checked contents of \`site/\` were uploaded to \`$DREAMHOST_PATH\`." >> "$GITHUB_STEP_SUMMARY"
+          echo "The checked, cache-safe website was uploaded to \`$DREAMHOST_PATH\`." >> "$GITHUB_STEP_SUMMARY"
 
