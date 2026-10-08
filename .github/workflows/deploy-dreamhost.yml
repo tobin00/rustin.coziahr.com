@@ -1,0 +1,69 @@
+name: Check and publish website
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: dreamhost-production
+  cancel-in-progress: true
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    environment: dreamhost-production
+    env:
+      DREAMHOST_HOST: ${{ secrets.DREAMHOST_HOST }}
+      DREAMHOST_USER: ${{ secrets.DREAMHOST_USER }}
+      DREAMHOST_PATH: ${{ secrets.DREAMHOST_PATH }}
+      DREAMHOST_PORT: ${{ secrets.DREAMHOST_PORT }}
+      DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+      DREAMHOST_KNOWN_HOSTS: ${{ secrets.DREAMHOST_KNOWN_HOSTS }}
+    steps:
+      - name: Get website files
+        uses: actions/checkout@v6
+
+      - name: Check website
+        run: node tools/validate.mjs
+
+      - name: Check DreamHost connection settings
+        if: github.event_name != 'pull_request'
+        id: dreamhost
+        shell: bash
+        run: |
+          missing=0
+          for name in DREAMHOST_HOST DREAMHOST_USER DREAMHOST_PATH DREAMHOST_SSH_KEY DREAMHOST_KNOWN_HOSTS; do
+            if [ -z "${!name}" ]; then
+              echo "::notice::$name is not configured; publishing will be skipped."
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 0 ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Prepare secure DreamHost connection
+        if: github.event_name != 'pull_request' && steps.dreamhost.outputs.ready == 'true'
+        shell: bash
+        run: |
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$DREAMHOST_SSH_KEY" > "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$DREAMHOST_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+
+      - name: Publish site folder to DreamHost
+        if: github.event_name != 'pull_request' && steps.dreamhost.outputs.ready == 'true'
+        shell: bash
+        run: |
+          port="${DREAMHOST_PORT:-22}"
+          rsync -rlptDz --delete-after \
+            --exclude='.well-known/' \
+            -e "ssh -i $HOME/.ssh/id_ed25519 -p $port" \
+            site/ "$DREAMHOST_USER@$DREAMHOST_HOST:$DREAMHOST_PATH/"
+          echo "### Published to DreamHost" >> "$GITHUB_STEP_SUMMARY"
+          echo "The checked contents of \`site/\` were uploaded to \`$DREAMHOST_PATH\`." >> "$GITHUB_STEP_SUMMARY"
+

@@ -1,6 +1,6 @@
 # Rustin's website
 
-This repository powers **https://rustin.coziahr.com**. It is a simple static website designed to be edited safely with ChatGPT or Codex and published automatically by GitHub Pages.
+This repository powers **https://rustin.coziahr.com**. It is a simple static website designed to be edited safely with ChatGPT or Codex, stored in GitHub, and published automatically to DreamHost.
 
 ## Start here
 
@@ -23,7 +23,7 @@ The detailed beginner guide is in [docs/HOW_TO_EDIT.md](docs/HOW_TO_EDIT.md).
 - `site/assets/content.js` — Rustin's words, hobbies, and social links
 - `site/assets/styles.css` — all visual designs
 - `AGENTS.md` — safety instructions that coding assistants automatically read
-- `.github/workflows/pages.yml` — automatic publishing
+- `.github/workflows/deploy-dreamhost.yml` — checks the site and securely publishes it to DreamHost
 
 ## Preview and check
 
@@ -43,5 +43,5 @@ npm run check
 
 ## One-time owner setup
 
-See [docs/OWNER_SETUP.md](docs/OWNER_SETUP.md) for GitHub Pages, the custom domain, HTTPS, and collaborator access.
+See [docs/OWNER_SETUP.md](docs/OWNER_SETUP.md) for the one-time DreamHost connection, HTTPS, and collaborator access.
 

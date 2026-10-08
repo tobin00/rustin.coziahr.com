@@ -10,7 +10,7 @@ You do not need to understand the code. Your AI helper has instructions built in
 4. Look at the homepage and the testing page.
 5. If you like it, say: **“Check everything and publish it.”**
 
-Publishing means the assistant checks the site, saves a Git commit, and pushes it to GitHub. GitHub then updates the public website automatically.
+Publishing means the assistant checks the site, saves a Git commit, and pushes it to GitHub. GitHub then securely copies the public site files to DreamHost automatically.
 
 ## Safe prompts you can copy
 
@@ -32,7 +32,7 @@ Publishing means the assistant checks the site, saves a Git commit, and pushes i
 
 ### Publish
 
-> Check everything and show me what will be published. If the checks pass and there are no unrelated changes, commit and push it to main.
+> Check everything and show me what will be published. If the checks pass and there are no unrelated changes, commit and push it to main. Confirm that the DreamHost upload completed.
 
 ## Important safety notes
 
