@@ -25,7 +25,7 @@ window.RUSTIN_SITE = {
     ]
   },
   socials: [
-    { label: "Instagram", handle: "Add Rustin’s profile", url: "#" },
+    { label: "Instagram", handle: "@rustin_c", url: "https://www.instagram.com/rustin_c/" },
     { label: "YouTube", handle: "Add Rustin’s channel", url: "#" },
     { label: "GitHub", handle: "Add Rustin’s profile", url: "#" }
   ]
