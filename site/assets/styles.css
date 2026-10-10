@@ -15,7 +15,9 @@ a { color: inherit; }
 .wordmark-logo { width: 2.8rem; aspect-ratio: 1; object-fit: contain; border-radius: 50%; background: #fff; }
 nav { display: flex; gap: clamp(1rem, 3vw, 2.5rem); }
 nav a, footer a { text-decoration: none; font-size: .9rem; font-weight: 700; }
-.hero { position: relative; min-height: 72vh; display: flex; flex-direction: column; justify-content: center; padding: 4rem 0 7rem; }
+.hero { position: relative; min-height: 72vh; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(16rem, .8fr); align-items: center; gap: 2rem; padding: 4rem 0 7rem; }
+.hero-copy { position: relative; z-index: 1; }
+.hero-art { width: 100%; max-width: 30rem; justify-self: end; display: block; background: #fff; border: .5rem solid #fff; border-radius: 50%; box-shadow: 0 1rem 4rem rgba(0,0,0,.24); }
 .eyebrow, .section-number, .card-number { font: 700 .75rem/1.2 "Space Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
 h1 { margin: .4rem 0 1.5rem; max-width: 10ch; font-size: clamp(4.4rem, 13vw, 10rem); line-height: .82; letter-spacing: -.07em; }
 h1 span { display: block; }
@@ -113,7 +115,8 @@ body[data-design="4"] .social-link:hover { color: #ed2d24; }
 
 @media (max-width: 760px) {
   .site-header { align-items: flex-start; }.site-header nav { display: none; }
-  .hero { min-height: 80vh; padding-top: 5rem; }
+  .hero { min-height: 80vh; grid-template-columns: 1fr; gap: 2rem; padding-top: 5rem; }
+  .hero-art { width: min(78%, 24rem); justify-self: center; }
   .hobby-grid { grid-template-columns: 1fr; }.hobby-card { min-height: 14rem; }
   .woodworking-feature { margin-top: 3.5rem; }
   .woodworking-intro { grid-template-columns: 1fr; align-items: start; }
