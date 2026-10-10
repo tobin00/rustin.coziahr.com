@@ -17,6 +17,27 @@
       </article>`).join("");
   }
 
+  const woodworkingAlbum = document.querySelector('[data-section="woodworking"]');
+  if (woodworkingAlbum && content.woodworking) {
+    const wood = content.woodworking;
+    woodworkingAlbum.innerHTML = `
+      <div class="woodworking-intro">
+        <div>
+          <p class="eyebrow">${wood.eyebrow}</p>
+          <h3>${wood.title}</h3>
+          <p>${wood.intro}</p>
+        </div>
+        <img src="${wood.profileImage}" alt="${wood.profileAlt}" loading="lazy">
+      </div>
+      <div class="woodworking-album">
+        ${wood.photos.map((photo) => `
+          <figure class="woodworking-photo">
+            <img src="${photo.src}" alt="${photo.alt}" loading="lazy">
+            <figcaption>${photo.caption}</figcaption>
+          </figure>`).join("")}
+      </div>`;
+  }
+
   const socialList = document.querySelector('[data-list="socials"]');
   if (socialList) {
     socialList.innerHTML = content.socials.map((social) => {

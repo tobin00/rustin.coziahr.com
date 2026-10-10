@@ -12,6 +12,7 @@ a { color: inherit; }
 .site-header { display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 0; }
 .wordmark { display: flex; align-items: center; gap: .7rem; font-weight: 700; text-decoration: none; }
 .wordmark-mark { display: grid; place-items: center; width: 2.2rem; aspect-ratio: 1; border-radius: 50%; }
+.wordmark-logo { width: 2.8rem; aspect-ratio: 1; object-fit: contain; border-radius: 50%; background: #fff; }
 nav { display: flex; gap: clamp(1rem, 3vw, 2.5rem); }
 nav a, footer a { text-decoration: none; font-size: .9rem; font-weight: 700; }
 .hero { position: relative; min-height: 72vh; display: flex; flex-direction: column; justify-content: center; padding: 4rem 0 7rem; }
@@ -31,6 +32,20 @@ h2 { margin: 0; font-size: clamp(2.4rem, 6vw, 5rem); letter-spacing: -.05em; }
 .hobby-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .hobby-card { min-height: 18rem; padding: 1.5rem; display: flex; flex-direction: column; }
 .hobby-card h3 { margin: auto 0 .5rem; font-size: 1.7rem; }.hobby-card > p:last-child { margin: 0; line-height: 1.55; }
+.woodworking-feature { margin-top: 5rem; }
+.woodworking-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(12rem, 18rem); gap: 2rem; align-items: end; margin-bottom: 1.2rem; }
+.woodworking-intro h3 { margin: .35rem 0 1rem; font-size: clamp(2.4rem, 6vw, 5rem); line-height: .9; letter-spacing: -.05em; }
+.woodworking-intro p:last-child { max-width: 42rem; margin: 0; font-size: clamp(1rem, 1.7vw, 1.2rem); line-height: 1.55; }
+.woodworking-intro img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 60% 45%; }
+.woodworking-album { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+.woodworking-photo { position: relative; min-height: 18rem; margin: 0; overflow: hidden; }
+.woodworking-photo:nth-child(1), .woodworking-photo:nth-child(3) { grid-column: span 3; }
+.woodworking-photo:nth-child(2), .woodworking-photo:nth-child(4), .woodworking-photo:nth-child(5) { grid-column: span 2; }
+.woodworking-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s var(--ease); }
+.woodworking-photo:nth-child(2) img { object-position: 50% 42%; }
+.woodworking-photo:nth-child(4) img, .woodworking-photo:nth-child(5) img { object-position: 50% 62%; }
+.woodworking-photo:hover img { transform: scale(1.04); }
+.woodworking-photo figcaption { position: absolute; left: .8rem; bottom: .8rem; padding: .45rem .65rem; font: 700 .75rem/1.2 "Space Mono", monospace; text-transform: uppercase; letter-spacing: .08em; }
 .social-list { border-top: 1px solid currentColor; }
 .social-link { display: grid; grid-template-columns: 1fr 2fr auto; gap: 1rem; align-items: center; padding: 1.4rem 0; border-bottom: 1px solid currentColor; text-decoration: none; }
 .social-link span:first-child { font-size: 1.4rem; font-weight: 700; }.social-link span:last-child { font-size: 1.5rem; }
@@ -45,6 +60,8 @@ body[data-design="1"] .hero-accent { color: #8df0c8; }
 body[data-design="1"] .orbit { border: 1px solid rgba(141, 240, 200, .55); box-shadow: inset 0 0 70px rgba(77, 113, 255, .15), 0 0 70px rgba(141, 240, 200, .08); }
 body[data-design="1"] .hobby-card { background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.16); }
 body[data-design="1"] .hobby-card:nth-child(2) { background: #8df0c8; color: #07111f; transform: translateY(1.5rem); }
+body[data-design="1"] .woodworking-intro img, body[data-design="1"] .woodworking-photo { border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.045); }
+body[data-design="1"] .woodworking-photo figcaption { background: #8df0c8; color: #07111f; }
 body[data-design="1"] .social-link { border-color: rgba(255,255,255,.25); transition: padding .25s var(--ease), color .25s; }
 body[data-design="1"] .social-link:hover { padding-left: 1rem; color: #8df0c8; }
 
@@ -58,6 +75,8 @@ body[data-design="2"] .orbit { border: 2px dashed #17352b; }
 body[data-design="2"] .hobby-grid { gap: 0; border: 2px solid #17352b; }
 body[data-design="2"] .hobby-card { border-right: 2px solid #17352b; background: rgba(242,234,215,.86); }
 body[data-design="2"] .hobby-card:last-child { border-right: 0; }
+body[data-design="2"] .woodworking-intro img, body[data-design="2"] .woodworking-photo { border: 2px solid #17352b; }
+body[data-design="2"] .woodworking-photo figcaption { background: #17352b; color: #f2ead7; }
 body[data-design="2"] .social-link { border-width: 2px; }
 body[data-design="2"] .social-link:hover { background: #17352b; color: #f2ead7; padding-inline: 1rem; }
 
@@ -71,6 +90,9 @@ body[data-design="3"] .orbit { border: 3px solid #19d9ff; box-shadow: 9px 9px 0 
 body[data-design="3"] .hobby-card { border: 3px solid #fff5fb; background: #2c0b4f; box-shadow: 8px 8px 0 #19d9ff; }
 body[data-design="3"] .hobby-card:nth-child(2) { box-shadow: 8px 8px 0 #e8ff47; }
 body[data-design="3"] .hobby-card:nth-child(3) { box-shadow: 8px 8px 0 #ff3d9a; }
+body[data-design="3"] .woodworking-intro img, body[data-design="3"] .woodworking-photo { border: 3px solid #fff5fb; box-shadow: 8px 8px 0 #19d9ff; }
+body[data-design="3"] .woodworking-photo:nth-child(even) { box-shadow: 8px 8px 0 #ff3d9a; }
+body[data-design="3"] .woodworking-photo figcaption { background: #e8ff47; color: #24083e; }
 body[data-design="3"] .social-link:hover { color: #e8ff47; }
 
 /* DESIGN 4 — Redline Poster. Minimal type with one confident accent. */
@@ -85,12 +107,21 @@ body[data-design="4"] .hobby-grid { grid-template-columns: 1fr; gap: 0; }
 body[data-design="4"] .hobby-card { min-height: 0; display: grid; grid-template-columns: 5rem 1fr 2fr; gap: 1rem; align-items: center; border-top: 1px solid #151515; padding-inline: 0; }
 body[data-design="4"] .hobby-card:last-child { border-bottom: 1px solid #151515; }
 body[data-design="4"] .hobby-card h3, body[data-design="4"] .hobby-card > p { margin: 0; }
+body[data-design="4"] .woodworking-intro { align-items: stretch; border-top: 1px solid #151515; border-bottom: 1px solid #151515; padding: 1rem 0; }
+body[data-design="4"] .woodworking-intro img { mix-blend-mode: multiply; }
+body[data-design="4"] .woodworking-photo { border: 1px solid #151515; }
+body[data-design="4"] .woodworking-photo figcaption { background: #ed2d24; color: #fff; }
 body[data-design="4"] .social-link:hover { color: #ed2d24; }
 
 @media (max-width: 760px) {
   .site-header { align-items: flex-start; }.site-header nav { display: none; }
   .hero { min-height: 80vh; padding-top: 5rem; }.orbit { opacity: .35; right: -22%; top: 30%; }
   .hobby-grid { grid-template-columns: 1fr; }.hobby-card { min-height: 14rem; }
+  .woodworking-feature { margin-top: 3.5rem; }
+  .woodworking-intro { grid-template-columns: 1fr; align-items: start; }
+  .woodworking-intro img { max-width: 18rem; }
+  .woodworking-album { grid-template-columns: 1fr; }
+  .woodworking-photo, .woodworking-photo:nth-child(1), .woodworking-photo:nth-child(2), .woodworking-photo:nth-child(3), .woodworking-photo:nth-child(4), .woodworking-photo:nth-child(5) { grid-column: 1; min-height: 16rem; }
   body[data-design="1"] .hobby-card:nth-child(2) { transform: none; }
   body[data-design="2"] .hobby-grid { border-bottom: 0; }.hobby-card, body[data-design="2"] .hobby-card { border-right: 0; border-bottom: 2px solid; }
   body[data-design="4"] .hobby-card { grid-template-columns: 3rem 1fr; }.hobby-card > p:last-child { grid-column: 2; }
