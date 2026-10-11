@@ -17,7 +17,7 @@ nav { display: flex; gap: clamp(1rem, 3vw, 2.5rem); }
 nav a, footer a { text-decoration: none; font-size: .9rem; font-weight: 700; }
 .hero { position: relative; min-height: 72vh; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(16rem, .8fr); align-items: center; gap: 2rem; padding: 4rem 0 7rem; }
 .hero-copy { position: relative; z-index: 1; }
-.hero-art { width: 100%; max-width: 30rem; justify-self: end; display: block; background: #fff; border: .5rem solid #fff; border-radius: 50%; box-shadow: 0 1rem 4rem rgba(0,0,0,.24); }
+.hero-art { width: 100%; max-width: 30rem; justify-self: end; display: block; object-fit: contain; }
 .eyebrow, .section-number, .card-number { font: 700 .75rem/1.2 "Space Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
 h1 { margin: .4rem 0 1.5rem; max-width: 10ch; font-size: clamp(4.4rem, 13vw, 10rem); line-height: .82; letter-spacing: -.07em; }
 h1 span { display: block; }
