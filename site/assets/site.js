@@ -93,6 +93,12 @@
         <span>${social.label}</span><span>${social.handle}</span><span aria-hidden="true">↗</span>
       </a>`;
     }).join("");
+    if (content.siteCredit) {
+      const credit = document.createElement("div");
+      credit.className = "social-credit";
+      credit.innerHTML = `<span>${content.siteCredit.note}</span><a href="${content.siteCredit.url}" target="_blank" rel="noreferrer">${content.siteCredit.text}</a>`;
+      socialList.after(credit);
+    }
   }
 
   document.querySelectorAll('a[href="#"][aria-disabled="true"]').forEach((link) => {

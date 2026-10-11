@@ -28,6 +28,7 @@ window.RUSTIN_SITE = {
     { label: "Instagram", handle: "@rustin_c", url: "https://www.instagram.com/rustin_c/" },
     { label: "Facebook", handle: "Rustin Coziahr", url: "https://www.facebook.com/rustin.coziahr" },
     { label: "YouTube", handle: "@RustinCoziahr", url: "https://www.youtube.com/@RustinCoziahr" }
-  ]
+  ],
+  siteCredit: { note: "Forever free", text: "By Tobin Coziahr", url: "https://coziahr.com/" }
 };
 

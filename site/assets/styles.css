@@ -54,6 +54,9 @@ h2 { margin: 0; font-size: clamp(2.4rem, 6vw, 5rem); letter-spacing: -.05em; }
 .social-link { display: grid; grid-template-columns: 1fr 2fr auto; gap: 1rem; align-items: center; padding: 1.4rem 0; border-bottom: 1px solid currentColor; text-decoration: none; }
 .social-link span:first-child { font-size: 1.4rem; font-weight: 700; }.social-link span:last-child { font-size: 1.5rem; }
 .social-link.placeholder { opacity: .55; cursor: not-allowed; }
+.social-credit { display: grid; grid-template-columns: 1fr 2fr auto; gap: 1rem; padding-top: 1rem; font-size: .9rem; }
+.social-credit a { grid-column: 2; font-weight: 700; text-decoration: none; }
+.social-credit a:hover { text-decoration: underline; }
 footer { display: flex; justify-content: space-between; gap: 2rem; padding: 3rem 0; font-size: .9rem; }
 
 /* DESIGN 1 — Night Signal. This is the initial live design. */
@@ -127,6 +130,8 @@ body[data-design="4"] .social-link:hover { color: #ed2d24; }
   body[data-design="2"] .hobby-grid { border-bottom: 0; }.hobby-card, body[data-design="2"] .hobby-card { border-right: 0; border-bottom: 2px solid; }
   body[data-design="4"] .hobby-card { grid-template-columns: 3rem 1fr; }.hobby-card > p:last-child { grid-column: 2; }
   .social-link { grid-template-columns: 1fr auto; }.social-link span:nth-child(2) { grid-row: 2; font-size: .85rem; }.social-link span:last-child { grid-column: 2; grid-row: 1 / span 2; }
+  .social-credit { grid-template-columns: 1fr auto; }
+  .social-credit a { grid-column: 1; }
   footer { flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .woodworking-slide { transition: none; } }
