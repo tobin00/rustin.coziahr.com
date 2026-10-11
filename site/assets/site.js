@@ -11,7 +11,6 @@
   if (hobbyList) {
     hobbyList.innerHTML = content.hobbies.map((hobby) => `
       <article class="hobby-card${hobby.title === "Woodworking" ? " woodworking-card" : ""}"${hobby.title === "Woodworking" ? ' role="button" tabindex="0" aria-controls="woodworking-album" aria-expanded="false"' : ""}>
-        <p class="card-number">${hobby.number}</p>
         <h3>${hobby.title}</h3>
         <p>${hobby.description}</p>
         ${hobby.title === "Woodworking" ? '<span class="slideshow-hint">View photo album <span aria-hidden="true">↗</span></span>' : ""}

@@ -6,9 +6,9 @@ window.RUSTIN_SITE = {
   intro: "A place for the things I’m making, playing, learning, and enjoying along the way.",
   footer: "Made with curiosity and probably revised a few times.",
   hobbies: [
-    { number: "01", title: "Woodworking", description: "Live-edge slabs, boards, shop projects, and pieces shaped by hand." },
-    { number: "02", title: "Travel", description: "New places, good food, and the stories that come with the trip." },
-    { number: "03", title: "Points and Miles", description: "Making rewards go further and finding the next place to explore." }
+    { title: "Woodworking", description: "Live-edge slabs, boards, shop projects, and pieces shaped by hand." },
+    { title: "Travel", description: "New places, good food, and the stories that come with the trip." },
+    { title: "Points and Miles", description: "Making rewards go further and finding the next place to explore." }
   ],
   woodworking: {
     eyebrow: "Featured interest",
