@@ -27,8 +27,7 @@ window.RUSTIN_SITE = {
   socials: [
     { label: "Instagram", handle: "@rustin_c", url: "https://www.instagram.com/rustin_c/" },
     { label: "Facebook", handle: "Rustin Coziahr", url: "https://www.facebook.com/rustin.coziahr" },
-    { label: "YouTube", handle: "Add Rustin’s channel", url: "#" },
-    { label: "GitHub", handle: "Add Rustin’s profile", url: "#" }
+    { label: "YouTube", handle: "@RustinCoziahr", url: "https://www.youtube.com/@RustinCoziahr" }
   ]
 };
 
