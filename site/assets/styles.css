@@ -19,6 +19,7 @@ nav a, footer a { text-decoration: none; font-size: .9rem; font-weight: 700; }
 .hero-copy { position: relative; z-index: 1; }
 .hero-art { width: 100%; max-width: 30rem; justify-self: end; display: block; object-fit: contain; }
 .homepage-hero-art { width: 120%; max-width: 36rem; }
+.testing-hero-art { width: 120%; max-width: 36rem; }
 .eyebrow, .section-number, .card-number { font: 700 .75rem/1.2 "Space Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
 h1 { margin: .4rem 0 1.5rem; max-width: 10ch; font-size: clamp(4.4rem, 13vw, 10rem); line-height: .82; letter-spacing: -.07em; }
 h1 span { display: block; }
@@ -124,6 +125,7 @@ body[data-design="4"] .social-link:hover { color: #ed2d24; }
   .hero { min-height: 80vh; grid-template-columns: 1fr; gap: 2rem; padding-top: 5rem; }
   .hero-art { width: min(78%, 24rem); justify-self: center; }
   .homepage-hero-art { width: min(93.6%, 28.8rem); }
+  .testing-hero-art { width: min(93.6%, 28.8rem); }
   .hobby-grid { grid-template-columns: 1fr; }.hobby-card { min-height: 14rem; }
   .woodworking-feature { margin-top: 3.5rem; }
   .woodworking-intro { grid-template-columns: 1fr; align-items: start; }
