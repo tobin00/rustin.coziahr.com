@@ -96,7 +96,7 @@
     if (content.siteCredit) {
       const credit = document.createElement("div");
       credit.className = "social-credit";
-      credit.innerHTML = `<span>${content.siteCredit.note}</span><a href="${content.siteCredit.url}" target="_blank" rel="noreferrer">${content.siteCredit.text}</a>`;
+      credit.innerHTML = `<span>${content.siteCredit.note}</span><a href="${content.siteCredit.url}" target="_blank" rel="noreferrer">${content.siteCredit.text}</a><span class="social-credit-arrow" aria-hidden="true">↗</span>`;
       socialList.after(credit);
     }
   }
