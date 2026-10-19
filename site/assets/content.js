@@ -7,8 +7,8 @@ window.RUSTIN_SITE = {
   footer: "Made with curiosity and probably revised a few times.",
   hobbies: [
     { title: "Woodworking", description: "Live-edge slabs, boards, shop projects, and pieces shaped by hand." },
-    { title: "Travel", description: "New places, good food, and the stories that come with the trip." },
-    { title: "Points and Miles", description: "Making rewards go further and finding the next place to explore." }
+    { title: "Travel, Points and Miles", description: "New places, good food, and making rewards go further along the way." },
+    { title: "Fitness", description: "Staying active, building strength, and feeling good along the way." }
   ],
   woodworking: {
     eyebrow: "Featured interest",
