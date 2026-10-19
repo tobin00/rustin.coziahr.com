@@ -34,6 +34,38 @@ Publishing means the assistant checks the site, saves a Git commit, and pushes i
 
 > Check everything and show me what will be published. If the checks pass and there are no unrelated changes, commit and push it to main. Confirm that the DreamHost upload completed.
 
+## Update the travel map
+
+Open `site/assets/travel-countries.js`. This is the only file you need to
+change for the map's visited list, count, and upcoming outlines.
+
+- `visited: []` is intentionally empty until you supply your real travel history.
+- Put uppercase ISO two-letter country codes inside the brackets, in quotes,
+  separated by commas. For example only: `visited: ["US", "JP", "FR"],`.
+  That example means United States, Japan, and France; it is not your actual list.
+- Use `GB` for the United Kingdom, not `UK`. The checker catches invalid codes.
+- Each distinct visited code counts once. Countries and territories with their
+  own ISO code can be tracked separately. Antarctica is `AQ`.
+- `upcoming` controls the outlined destinations. It currently includes `US`,
+  `JP`, `CL`, and `AQ` from the adventures you supplied. No cruise stops were
+  assumed. Update this list separately when your plans change.
+- Set `showUpcoming: false` to hide upcoming outlines and their legend.
+- Upcoming countries never add to the visited count. A code in both lists
+  keeps its visited fill and also gets an upcoming outline. No dates appear
+  on the map. The map has no visitor editing controls.
+
+Refresh the local preview to see your changes, run `npm run check`, and ask
+to publish when ready. The published site changes only after publishing.
+The country selector and expandable text list provide a keyboard and screen
+reader alternative. Normal swipes scroll the page; “Move map” explicitly
+enables dragging and pinch zoom. “Done moving map” restores
+normal scrolling. Zoom buttons and the country selector work in either mode.
+
+The map uses local Leaflet files and prepared Natural Earth boundaries, with
+no paid service, API key, map tiles, or visitor CDN calls. The map assets load
+only as a visitor approaches the section. Provenance and licenses are in
+`site/assets/vendor/leaflet/`. Keep those files intact.
+
 ## Important safety notes
 
 - Never paste passwords, private keys, or account recovery codes into the website files.

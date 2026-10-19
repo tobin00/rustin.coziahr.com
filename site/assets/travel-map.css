@@ -1,0 +1,52 @@
+/* AROUND THE WORLD — shared map; colors follow the four existing designs. */
+.world-section {
+  --world-visited: #8df0c8; --world-unvisited: #727b87; --world-upcoming: #f2bf75;
+  --world-ocean: #0b1827; --world-border: #263546;
+  padding: 4rem 0 2rem;
+}
+.world-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2rem; }
+.world-heading .eyebrow { color: var(--world-visited); margin: 0 0 1rem; }
+.world-stat { margin: 0; font-size: .9rem; }
+.world-stat strong { display: block; color: var(--world-visited); font-size: clamp(3rem, 6vw, 5rem); line-height: 1; letter-spacing: -.06em; }
+.world-frame { position: relative; border: 1px solid var(--world-border); background: var(--world-ocean); border-radius: .75rem; overflow: hidden; }
+#travel-map { min-height: 220px; aspect-ratio: 2 / 1; touch-action: pan-y pinch-zoom; }
+.world-loading { position: absolute; inset: 0; display: grid; place-content: center; margin: 0; padding: 1rem; text-align: center; }
+#travel-map.leaflet-container { background: var(--world-ocean); font: inherit; height: clamp(300px, 48vw, 590px); aspect-ratio: auto; z-index: 0; touch-action: pan-y pinch-zoom; }
+#travel-map.is-moving { touch-action: none; }
+#travel-map .leaflet-interactive { transition: fill-opacity .18s ease, stroke .18s ease; outline: none; }
+#travel-map .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; color: #263546; background: #f7f3e8; }
+#travel-map .leaflet-control-zoom a:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }
+#travel-map .leaflet-control { border-color: var(--world-border); box-shadow: none; }
+#travel-map .world-tooltip { border: 0; border-radius: .3rem; box-shadow: 0 3px 15px #0004; padding: 0; }
+.world-tooltip-content { display: grid; gap: .35rem; padding: .8rem 1rem; max-width: min(280px, 80vw); color: #07111f; font: .9rem/1.4 "DM Sans", sans-serif; text-align: center; }
+.world-tooltip-content strong { font-size: 1rem; }
+.world-legend { display: flex; flex-wrap: wrap; gap: 1.3rem; list-style: none; padding: 0; margin: 1.25rem 0; font-size: .85rem; }
+.world-legend li { display: flex; align-items: center; gap: .5rem; }
+.world-swatch { width: .85rem; height: .85rem; border-radius: 2px; background: var(--world-unvisited); }
+.world-swatch.visited { background: var(--world-visited); }
+.world-swatch.upcoming { background: transparent; border: 2px solid var(--world-upcoming); }
+.world-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.5rem; }
+.world-tools label { font-weight: 700; }
+.world-tools select, .world-tools button { min-height: 44px; max-width: 100%; padding: .65rem .8rem; border: 1px solid var(--world-border); border-radius: .25rem; font: inherit; }
+.world-tools select { background: #f7f3e8; color: #07111f; }
+.world-tools button { background: transparent; color: inherit; cursor: pointer; }
+.world-tools button[aria-pressed="true"] { background: var(--world-visited); color: var(--world-ocean); }
+.world-status { min-height: 1.5em; line-height: 1.5; }
+.world-help, .world-credit { font-size: .8rem; line-height: 1.6; }
+.world-country-list { margin: 1.5rem 0; }
+.world-country-list summary { cursor: pointer; font-weight: 700; padding: .6rem 0; }
+.world-country-list ul { display: flex; flex-wrap: wrap; gap: .6rem 2rem; padding-left: 1.2rem; }
+body[data-design="2"] .world-section { --world-visited: #17352b; --world-unvisited: #b6b0a3; --world-upcoming: #a2321b; --world-ocean: #eee5d1; --world-border: #d7cdb8; }
+body[data-design="3"] .world-section { --world-visited: #e8ff47; --world-unvisited: #897893; --world-upcoming: #19d9ff; --world-ocean: #24083e; --world-border: #3b2350; }
+body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisited: #a7a7a4; --world-upcoming: #195d80; --world-ocean: #eeede8; --world-border: #d9d8d1; }
+@media (max-width: 760px) {
+  .world-section { padding-top: 3rem; }
+  .world-stat strong { display: inline; font-size: 2rem; margin-right: .5rem; }
+  #travel-map { aspect-ratio: auto; min-height: 290px; }
+  #travel-map.leaflet-container { height: 320px; }
+  .world-tools label { flex-basis: 100%; }
+  .world-tools select { flex: 1; min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #travel-map .leaflet-interactive { transition: none; }
+}

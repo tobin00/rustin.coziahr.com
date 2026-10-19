@@ -23,6 +23,8 @@ Setting up a new Windows laptop? Start with [docs/LAPTOP_SETUP.md](docs/LAPTOP_S
 - `site/testing/index.html` — the design chooser
 - `site/testing/options/` — the four full-page testing designs
 - `site/assets/content.js` — Rustin's words, hobbies, and social links
+- `site/assets/travel-countries.js` — visited country codes and upcoming map outlines
+- `site/assets/travel-map.js` and `travel-map.css` — the interactive Around the world map
 - `site/assets/styles.css` — all visual designs
 - `AGENTS.md` — safety instructions that coding assistants automatically read
 - `CHECK_SETUP.cmd` — a read-only laptop prerequisite check

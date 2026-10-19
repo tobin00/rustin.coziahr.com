@@ -1,10 +1,14 @@
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { Script, runInNewContext } from "node:vm";
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const required = [
   "site/index.html", "site/testing/index.html", "site/assets/content.js", "site/assets/site.js", "site/assets/styles.css",
+  "site/assets/travel-map.js", "site/assets/travel-map.css", "site/assets/travel-countries.js",
+  "site/assets/vendor/leaflet/leaflet-1.9.4.js", "site/assets/vendor/leaflet/leaflet-1.9.4.css",
+  "site/assets/vendor/leaflet/countries.geo.json", "site/assets/vendor/leaflet/iso-codes.json",
   ...[1, 2, 3, 4].map((number) => `site/testing/options/${number}/index.html`)
 ];
 const errors = [];
@@ -18,6 +22,36 @@ for (const asset of ["assets/styles.css", "assets/content.js", "assets/site.js"]
 }
 const styles = await readFile(path.join(repo, "site/assets/styles.css"), "utf8");
 for (const number of [1, 2, 3, 4]) if (!styles.includes(`data-design=\"${number}\"`)) errors.push(`Missing CSS for design ${number}`);
+
+try {
+  for (const filename of ["content.js", "site.js", "travel-countries.js", "travel-map.js"]) {
+    new Script(await readFile(path.join(repo, "site/assets", filename), "utf8"), { filename });
+  }
+  const sandbox = { window: {} };
+  runInNewContext(await readFile(path.join(repo, "site/assets/travel-countries.js"), "utf8"), sandbox);
+  const travel = sandbox.window.RUSTIN_TRAVEL;
+  const codes = new Set(JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/iso-codes.json"), "utf8")));
+  for (const field of ["visited", "upcoming"]) {
+    if (!Array.isArray(travel[field])) throw new Error(`Travel ${field} must be a list.`);
+    for (const code of travel[field]) {
+      if (!codes.has(code)) errors.push(`Invalid travel country code in ${field}: ${code}. Use an uppercase ISO two-letter code.`);
+    }
+  }
+  if (typeof travel.showUpcoming !== "boolean") errors.push("Travel showUpcoming must be true or false.");
+  const geography = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/countries.geo.json"), "utf8"));
+  for (const code of ["US", "JP", "CL", "AQ", "TV", "VA", "SG"]) {
+    if (!geography.features.some((feature) => feature.properties.code === code && feature.geometry)) errors.push(`World map is missing ${code}.`);
+  }
+  for (const page of ["site/index.html", ...[1, 2, 3, 4].map((number) => `site/testing/options/${number}/index.html`)]) {
+    const html = await readFile(path.join(repo, page), "utf8");
+    if (!html.includes('id="world"') || html.indexOf('id="world"') > html.indexOf('id="links"')) errors.push(`${page}: world map must precede Around the web.`);
+    for (const asset of ["travel-map.css", "travel-countries.js", "travel-map.js"]) {
+      if (!html.includes(asset)) errors.push(`${page} does not load ${asset}.`);
+    }
+  }
+} catch (error) {
+  errors.push(`Travel map check: ${error.message}`);
+}
 
 if (errors.length) {
   console.error("Site check failed:\n- " + errors.join("\n- "));

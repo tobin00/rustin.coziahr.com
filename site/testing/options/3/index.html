@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../../../assets/styles.css">
+  <link rel="stylesheet" href="../../../assets/travel-map.css">
   <title>Option 3 · Arcade Grid · Rustin</title>
 </head>
 <body data-design="3">
@@ -28,6 +29,32 @@
         <div class="hobby-grid" data-list="hobbies"></div>
         <div class="woodworking-feature" data-section="woodworking" hidden></div>
       </section>
+      <section class="world-section" id="world" aria-labelledby="world-title">
+        <div class="world-heading">
+          <div><p class="eyebrow">A little farther, every time</p><h2 id="world-title">Around the world</h2></div>
+          <p class="world-stat"><strong data-country-count>0</strong> Countries Explored</p>
+        </div>
+        <div class="world-frame">
+          <div id="travel-map" aria-describedby="world-help"></div>
+          <p class="world-loading" data-map-loading>Loading the world…</p>
+        </div>
+        <ul class="world-legend" aria-label="Map legend">
+          <li><span class="world-swatch visited" aria-hidden="true"></span>Visited</li>
+          <li><span class="world-swatch" aria-hidden="true"></span>Not Yet Visited</li>
+          <li data-upcoming-legend><span class="world-swatch upcoming" aria-hidden="true"></span>Upcoming</li>
+        </ul>
+        <p class="world-help" id="world-help">Hover or tap a country for details. Use + and − to zoom, or reset for the full world. Turn on “Move map” to drag or pinch-zoom; turn it off to scroll the page.</p>
+        <div class="world-tools">
+          <label for="world-country">Find a country</label>
+          <select id="world-country" data-country-picker disabled><option value="">Full world view</option></select>
+          <button type="button" data-reset-map hidden>Reset world view</button>
+          <button type="button" data-move-map aria-pressed="false" hidden>Move map</button>
+        </div>
+        <p class="world-status" data-country-status role="status">Hover or tap a country to explore.</p>
+        <details class="world-country-list"><summary>Countries I’ve explored — text list</summary><div data-visited-list>My visited-country list is coming soon.</div></details>
+        <noscript><p>The interactive map and country list need JavaScript.</p></noscript>
+        <p class="world-credit">Map: <a href="https://leafletjs.com/" target="_blank" rel="noreferrer">Leaflet</a> · Country boundaries: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a> via <a href="https://github.com/topojson/world-atlas" target="_blank" rel="noreferrer">World Atlas</a></p>
+      </section>
       <section class="links-section" id="links" aria-labelledby="links-title">
         <div class="section-heading"><h2 id="links-title">Around the web</h2></div>
         <div class="social-list" data-list="socials"></div>
@@ -37,5 +64,7 @@
   </div>
   <script src="../../../assets/content.js"></script>
   <script src="../../../assets/site.js"></script>
+  <script src="../../../assets/travel-countries.js"></script>
+  <script src="../../../assets/travel-map.js"></script>
 </body>
 </html>
