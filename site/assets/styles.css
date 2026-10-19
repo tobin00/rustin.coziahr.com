@@ -36,6 +36,17 @@ h2 { margin: 0; font-size: clamp(2.4rem, 6vw, 5rem); letter-spacing: -.05em; }
 .woodworking-card[aria-expanded="true"] { transform: translateY(-.25rem); }
 .slideshow-hint { display: flex; justify-content: space-between; margin-top: 1.25rem; font: 700 .75rem/1.2 "Space Mono", monospace; text-transform: uppercase; }
 .hobby-card h3 { margin: auto 0 .5rem; font-size: 1.7rem; }.hobby-card > p:last-child { margin: 0; line-height: 1.55; }
+/* Shared travel plans, expanded with the native keyboard-accessible disclosure. */
+.hobby-card > p:has(+ .adventures) { margin: 0; line-height: 1.55; }
+.hobby-grid:has(.adventures[open]) { align-items: start; }
+.adventures { margin-top: 1.25rem; min-width: 0; }
+.adventures summary { cursor: pointer; font-weight: 700; line-height: 1.5; }
+.adventure-list { list-style: none; margin: 1rem 0 0; padding: 0; }
+.adventure-list li { padding: 1rem 0; border-top: 1px solid currentColor; }
+.adventure-list li:last-child { padding-bottom: 0; }
+.adventure-list h4 { margin: 0 0 .35rem; font-size: 1.1rem; }
+.adventure-list p { margin: .25rem 0 0; line-height: 1.55; }
+.adventure-date { font-size: .9rem; font-weight: 700; }
 .woodworking-feature { margin-top: 5rem; }
 .woodworking-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(12rem, 18rem); gap: 2rem; align-items: end; margin-bottom: 1.2rem; }
 .woodworking-intro h3 { margin: .35rem 0 1rem; font-size: clamp(2.4rem, 6vw, 5rem); line-height: .9; letter-spacing: -.05em; }
@@ -114,6 +125,7 @@ body[data-design="4"] .hobby-grid { grid-template-columns: 1fr; gap: 0; }
 body[data-design="4"] .hobby-card { min-height: 0; display: grid; grid-template-columns: 5rem 1fr 2fr; gap: 1rem; align-items: center; border-top: 1px solid #151515; padding-inline: 0; }
 body[data-design="4"] .hobby-card:last-child { border-bottom: 1px solid #151515; }
 body[data-design="4"] .hobby-card h3, body[data-design="4"] .hobby-card > p { margin: 0; }
+body[data-design="4"] .adventures { grid-column: 2 / -1; margin-top: 0; }
 body[data-design="4"] .woodworking-intro { align-items: stretch; border-top: 1px solid #151515; border-bottom: 1px solid #151515; padding: 1rem 0; }
 body[data-design="4"] .woodworking-intro img { mix-blend-mode: multiply; }
 body[data-design="4"] .woodworking-slides { border: 1px solid #151515; }

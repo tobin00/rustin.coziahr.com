@@ -13,6 +13,18 @@
       <article class="hobby-card${hobby.title === "Woodworking" ? " woodworking-card" : ""}"${hobby.title === "Woodworking" ? ' role="button" tabindex="0" aria-controls="woodworking-album" aria-expanded="false"' : ""}>
         <h3>${hobby.title}</h3>
         <p>${hobby.description}</p>
+        ${hobby.adventures?.length ? `
+          <details class="adventures">
+            <summary><span aria-hidden="true">🌎</span> ${hobby.adventuresTitle}</summary>
+            <ul class="adventure-list">
+              ${hobby.adventures.map((trip) => `
+                <li>
+                  <h4>${trip.title} <span aria-hidden="true">${trip.icon}</span></h4>
+                  <p class="adventure-date">${trip.date}</p>
+                  <p>${trip.description}${trip.note ? ` <em>(${trip.note})</em>` : ""}</p>
+                </li>`).join("")}
+            </ul>
+          </details>` : ""}
         ${hobby.title === "Woodworking" ? '<span class="slideshow-hint">View photo album <span aria-hidden="true">↗</span></span>' : ""}
       </article>`).join("");
   }

@@ -7,7 +7,19 @@ window.RUSTIN_SITE = {
   footer: "Made with curiosity and probably revised a few times.",
   hobbies: [
     { title: "Woodworking", description: "Live-edge slabs, boards, shop projects, and pieces shaped by hand." },
-    { title: "Travel, Points and Miles", description: "New places, good food, and making rewards go further along the way." },
+    {
+      title: "Travel, Points and Miles",
+      description: "New places, good food, and making rewards go further along the way.",
+      adventuresTitle: "Upcoming Adventures",
+      adventures: [
+        { title: "Chicago Seminars", icon: "🇺🇸", date: "November 2026", description: "Chicago, Illinois" },
+        { title: "Japan", icon: "🇯🇵", date: "November 2026", description: "Tokyo & Osaka" },
+        { title: "Las Vegas", icon: "🇺🇸", date: "December 2026", description: "Miles to Memories Meetup" },
+        { title: "Chile", icon: "🇨🇱", date: "Spring 2027", description: "Santiago & Atacama Desert", note: "tentative itinerary" },
+        { title: "Great Lakes Cruise", icon: "🚢", date: "Summer 2027", description: "North American Great Lakes" },
+        { title: "Antarctica", icon: "🇦🇶", date: "Early 2028", description: "Antarctic Peninsula Expedition" }
+      ]
+    },
     { title: "Fitness", description: "Staying active, building strength, and feeling good along the way." }
   ],
   woodworking: {
