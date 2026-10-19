@@ -9,15 +9,15 @@
 .world-stat { margin: 0; font-size: .9rem; }
 .world-stat strong { display: block; color: var(--world-visited); font-size: clamp(3rem, 6vw, 5rem); line-height: 1; letter-spacing: -.06em; }
 .world-frame { position: relative; border: 1px solid var(--world-border); background: var(--world-ocean); border-radius: .75rem; overflow: hidden; }
-#travel-map { min-height: 220px; aspect-ratio: 2 / 1; touch-action: pan-y pinch-zoom; }
+.world-section .travel-map { min-height: 220px; height: clamp(300px, 48vw, 590px); touch-action: pan-y pinch-zoom; }
 .world-loading { position: absolute; inset: 0; display: grid; place-content: center; margin: 0; padding: 1rem; text-align: center; }
-#travel-map.leaflet-container { background: var(--world-ocean); font: inherit; height: clamp(300px, 48vw, 590px); aspect-ratio: auto; z-index: 0; touch-action: pan-y pinch-zoom; }
-#travel-map.is-moving { touch-action: none; }
-#travel-map .leaflet-interactive { transition: fill-opacity .18s ease, stroke .18s ease; outline: none; }
-#travel-map .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; color: #263546; background: #f7f3e8; }
-#travel-map .leaflet-control-zoom a:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }
-#travel-map .leaflet-control { border-color: var(--world-border); box-shadow: none; }
-#travel-map .world-tooltip { border: 0; border-radius: .3rem; box-shadow: 0 3px 15px #0004; padding: 0; }
+.world-section .travel-map.leaflet-container { background: var(--world-ocean); font: inherit; height: clamp(300px, 48vw, 590px); aspect-ratio: auto; z-index: 0; touch-action: pan-y pinch-zoom; }
+.world-section .travel-map.is-moving { touch-action: none; }
+.world-section .travel-map .leaflet-interactive { transition: fill-opacity .18s ease, stroke .18s ease; outline: none; }
+.world-section .travel-map .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; color: #263546; background: #f7f3e8; }
+.world-section .travel-map .leaflet-control-zoom a:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }
+.world-section .travel-map .leaflet-control { border-color: var(--world-border); box-shadow: none; }
+.world-section .travel-map .world-tooltip { border: 0; border-radius: .3rem; box-shadow: 0 3px 15px #0004; padding: 0; }
 .world-tooltip-content { display: grid; gap: .35rem; padding: .8rem 1rem; max-width: min(280px, 80vw); color: #07111f; font: .9rem/1.4 "DM Sans", sans-serif; text-align: center; }
 .world-tooltip-content strong { font-size: 1rem; }
 .world-legend { display: flex; flex-wrap: wrap; gap: 1.3rem; list-style: none; padding: 0; margin: 1.25rem 0; font-size: .85rem; }
@@ -42,11 +42,22 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 @media (max-width: 760px) {
   .world-section { padding-top: 3rem; }
   .world-stat strong { display: inline; font-size: 2rem; margin-right: .5rem; }
-  #travel-map { aspect-ratio: auto; min-height: 290px; }
-  #travel-map.leaflet-container { height: 320px; }
+  .world-section .travel-map { height: 320px; min-height: 290px; }
+  .world-section .travel-map.leaflet-container { height: 320px; }
   .world-tools label { flex-basis: 100%; }
-  .world-tools select { flex: 1; min-width: 0; }
+  .world-tools select { flex: 1 0 100%; width: 100%; min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  #travel-map .leaflet-interactive { transition: none; }
+  .world-section .travel-map .leaflet-interactive { transition: none; }
 }
+
+/* U.S. states breakout uses the same map controls and each design’s palette. */
+.states-breakout { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--world-border); }
+.states-heading { margin-bottom: 1rem; }
+.states-heading h3 { margin: 0; font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1.05; letter-spacing: -.04em; }
+.states-intro { margin: 0 0 1.8rem; line-height: 1.6; }
+.world-section.is-drilled-down .states-breakout { margin-top: 0; padding-top: 0; border-top: 0; }
+.world-back-button { min-height: 44px; margin-bottom: 2rem; padding: .7rem 1rem; background: transparent; color: inherit; border: 1px solid currentColor; border-radius: .25rem; font: inherit; font-weight: 700; cursor: pointer; }
+.world-section .travel-map .leaflet-interactive[role="button"]:focus-visible { outline: none; stroke: #fff; stroke-width: 3; }
+#states-map { height: clamp(320px, 52vw, 610px); }
+@media (max-width: 760px) { #states-map { height: 330px; } .states-breakout { margin-top: 3rem; padding-top: 2rem; } }

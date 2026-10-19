@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer"><meta name="description" content="Make a travel map of the destinations and U.S. states you’ve explored, and return to update it.">
+  <title>Create your own travel map · Rustin</title>
+  <link rel="stylesheet" href="../assets/styles.css"><link rel="stylesheet" href="../assets/travel-map.css"><link rel="stylesheet" href="../assets/friends-map.css">
+</head>
+<body data-design="1" class="maps-page">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="page-shell">
+    <header class="site-header"><a class="wordmark" href="/" aria-label="Rustin home"><img class="wordmark-logo" src="../assets/images/rustin-no-qr.png" alt=""><span>Rustin</span></a><nav aria-label="Primary navigation"><a href="/#world">Rustin’s map</a><a href="/#friends-maps">Friends’ maps</a></nav></header>
+    <main id="main" class="landing-main">
+      <section class="map-page-intro" aria-labelledby="map-page-title"><p class="eyebrow">Good company. Great adventures.</p><h1 id="map-page-title" data-map-title>Create your own map</h1><p class="intro" data-map-intro>Every place has a story. Mark the destinations and U.S. states you’ve explored, then come back to add the next chapter.</p></section>
+      <div class="map-owner-tools" data-owner-maps><button class="map-button secondary" type="button" data-new-map>Start a new map</button></div>
+      <p class="map-notice" data-map-error role="alert" hidden></p>
+      <p class="map-notice" data-view-only hidden>This is a shared, read-only map. Its owner can update it using their private edit link. <a href="/maps/">Create your own map</a>.</p>
+      <form id="map-form" class="map-editor">
+        <div class="map-profile-fields"><div><label for="map-name">Name on your map</label><input id="map-name" name="name" required maxlength="60" autocomplete="nickname" placeholder="Your first name or nickname"></div><label class="map-listing-choice"><input type="checkbox" id="map-listed"><span>Show my map in Rustin’s friends’ maps</span></label></div>
+        <p class="map-help" data-saving-note>Your display name and selected places can be viewed by anyone with your public link. Joining the friends list is optional. Only your private edit link can change your map—save it somewhere safe.</p>
+        <div class="map-honeypot" aria-hidden="true"><label for="map-website">Leave this field empty</label><input id="map-website" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="map-selection-panels">
+          <details class="map-selection" open><summary>Countries &amp; territories <span data-destination-selected>0 selected</span></summary><div class="map-selection-body"><label for="destination-search">Find a destination</label><input type="search" id="destination-search" placeholder="Search countries and territories" autocomplete="off"><div class="map-selection-actions"><button type="button" data-clear-destinations>Clear destinations</button></div><fieldset id="destination-options" class="map-options"><legend class="visually-hidden">Visited countries and territories</legend></fieldset></div></details>
+          <details class="map-selection" open><summary>United States <span data-state-selected>0 of 50 selected</span></summary><div class="map-selection-body"><label for="state-search">Find a state</label><input type="search" id="state-search" placeholder="Search the 50 states" autocomplete="off"><div class="map-selection-actions"><button type="button" data-select-all-states>Select all 50</button><button type="button" data-clear-states>Clear states</button></div><fieldset id="state-options" class="map-options"><legend class="visually-hidden">Visited U.S. states</legend></fieldset></div></details>
+        </div>
+        <div class="map-save-bar"><button class="map-button primary" type="submit" data-save-map>Save my map</button><button class="map-button danger" type="button" data-delete-map hidden>Delete my map</button><p data-save-status role="status" aria-live="polite">Choose your places, then save your map online.</p></div>
+      </form>
+      <section class="map-links-panel" data-map-links hidden aria-label="Your map links"><h2>Keep the right link</h2><div class="map-link-row"><label for="public-map-link">Public map link — share this one</label><input id="public-map-link" type="url" readonly><button type="button" data-copy-public>Copy public link</button></div><div class="map-link-row" data-private-link-row><label for="private-map-link">Private edit link — keep this one for yourself</label><input id="private-map-link" type="url" readonly><button type="button" data-copy-private>Copy private edit link</button><p class="map-help">Bookmark your private link to update your map from another device. Anyone with this link can edit your map.</p></div><p data-link-status role="status" aria-live="polite"></p></section>
+      <section class="world-section" id="world" aria-labelledby="world-title">
+        <div data-world-overview>
+        <div class="world-heading">
+          <div><p class="eyebrow">Your places, your story</p><h2 id="world-title">Your destinations</h2></div>
+          <p class="world-stat"><strong data-map-count>0</strong> <span data-map-count-label>Destinations Explored</span></p>
+        </div>
+        <div class="world-frame">
+          <div id="travel-map" class="travel-map" aria-describedby="world-help"></div>
+          <p class="world-loading" data-map-loading>Loading the world…</p>
+        </div>
+        <ul class="world-legend" aria-label="Map legend">
+          <li><span class="world-swatch visited" aria-hidden="true"></span>Visited</li>
+          <li><span class="world-swatch" aria-hidden="true"></span>Not Yet Visited</li>
+          <li data-upcoming-legend><span class="world-swatch upcoming" aria-hidden="true"></span>Upcoming</li>
+        </ul>
+        <p class="world-help" id="world-help">Hover or tap a country for details. Click or tap the United States to explore the states. Use + and − to zoom, or reset for the full world. Turn on “Move map” to drag or pinch-zoom; turn it off to scroll the page.</p>
+        <div class="world-tools">
+          <label for="world-country">Find a country</label>
+          <select id="world-country" data-map-picker disabled><option value="">Full world view</option></select>
+          <button type="button" data-reset-map hidden>Reset world view</button>
+          <button type="button" data-move-map aria-pressed="false" hidden>Move map</button>
+        </div>
+        <p class="world-status" data-map-status role="status">Hover or tap a country to explore.</p>
+        <details class="world-country-list"><summary>Explored destinations — text list</summary><div data-visited-list>No destinations added yet.</div></details>
+        <noscript><p>The interactive map and country list need JavaScript.</p></noscript>
+        <p class="world-credit">Map: <a href="https://leafletjs.com/" target="_blank" rel="noreferrer">Leaflet</a> · Country boundaries: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a> via <a href="https://github.com/topojson/world-atlas" target="_blank" rel="noreferrer">World Atlas</a></p>
+        </div>
+        <section class="states-breakout" id="united-states" aria-labelledby="states-title" hidden>
+          <button type="button" class="world-back-button" data-back-world>← Back to world map</button>
+          <div class="world-heading states-heading">
+            <div><p class="eyebrow">Coast to coast, and beyond</p><h3 id="states-title" tabindex="-1">Your U.S. states</h3></div>
+            <p class="world-stat"><strong data-map-count>0</strong> States Explored</p>
+          </div>
+          <p class="states-intro">Alaska and Hawaii are shown as insets.</p>
+          <div class="world-frame">
+            <div id="states-map" class="travel-map" aria-describedby="states-help"></div>
+            <p class="world-loading" data-map-loading>Loading the states…</p>
+          </div>
+          <ul class="world-legend" aria-label="U.S. state map legend"><li><span class="world-swatch visited" aria-hidden="true"></span>Visited</li><li><span class="world-swatch" aria-hidden="true"></span>Not Yet Visited</li></ul>
+          <p class="world-help" id="states-help">Hover or tap a state for details. Use + and − to zoom, or reset for all 50 states. Turn on “Move map” to drag or pinch-zoom; turn it off to scroll the page.</p>
+          <div class="world-tools">
+            <label for="state-picker">Find a state</label>
+            <select id="state-picker" data-map-picker disabled><option value="">All 50 states</option></select>
+            <button type="button" data-reset-map hidden>Reset U.S. view</button>
+            <button type="button" data-move-map aria-pressed="false" hidden>Move map</button>
+          </div>
+          <p class="world-status" data-map-status role="status">Hover or tap a state to explore.</p>
+          <details class="world-country-list"><summary>Explored states — text list</summary><div data-visited-list>No states added yet.</div></details>
+          <noscript><p>The interactive state map needs JavaScript.</p></noscript>
+          <p class="world-credit">State boundaries: <a href="https://github.com/topojson/us-atlas" target="_blank" rel="noreferrer">U.S. Atlas / U.S. Census Bureau</a>. Washington, D.C. and U.S. territories are excluded from the 50-state count.</p>
+        </section>
+      </section>
+
+    </main>
+    <footer><a href="/#friends-maps">← Back to Rustin’s friends’ maps</a></footer>
+  </div>
+  <script src="../assets/friends-config.js"></script>
+  <script src="../assets/travel-map.js"></script>
+  <script src="../assets/friends-map.js"></script>
+</body>
+</html>

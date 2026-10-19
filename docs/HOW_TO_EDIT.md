@@ -39,7 +39,12 @@ Publishing means the assistant checks the site, saves a Git commit, and pushes i
 Open `site/assets/travel-countries.js`. This is the only file you need to
 change for the map's visited list, count, and upcoming outlines.
 
-- `visited: []` is intentionally empty until you supply your real travel history.
+- `visited` currently records your 39 confirmed destinations. The count says
+  **Destinations Explored** because it includes countries and separately tracked
+  territories. Hong Kong (`HK`), Macau (`MO`), Taiwan (`TW`), and Puerto Rico (`PR`)
+  each have their own region. `GB` covers the United Kingdom; the map note names
+  England and Scotland. The United States (`US`) counts as one destination,
+  while its breakout separately shows all 50 states you have visited.
 - Put uppercase ISO two-letter country codes inside the brackets, in quotes,
   separated by commas. For example only: `visited: ["US", "JP", "FR"],`.
   That example means United States, Japan, and France; it is not your actual list.
@@ -52,7 +57,8 @@ change for the map's visited list, count, and upcoming outlines.
 - Set `showUpcoming: false` to hide upcoming outlines and their legend.
 - Upcoming countries never add to the visited count. A code in both lists
   keeps its visited fill and also gets an upcoming outline. No dates appear
-  on the map. The map has no visitor editing controls.
+  on the map. Your homepage map remains read-only; friends edit their own maps
+  on the separate `/maps/` page.
 
 Refresh the local preview to see your changes, run `npm run check`, and ask
 to publish when ready. The published site changes only after publishing.
@@ -65,6 +71,69 @@ The map uses local Leaflet files and prepared Natural Earth boundaries, with
 no paid service, API key, map tiles, or visitor CDN calls. The map assets load
 only as a visitor approaches the section. Provenance and licenses are in
 `site/assets/vendor/leaflet/`. Keep those files intact.
+
+The separate **Across the United States** breakout uses
+`site/assets/travel-states.js`. All 50 state postal codes are listed as visited,
+and this breakout stays hidden until someone clicks or taps the United States
+on the world map (or selects it in “Find a country”). “Back to world map” or
+Escape returns to the world view. Only one map is shown at a time. State
+boundaries load on demand when the breakout opens. The country shape also
+supports keyboard focus and Enter/Space to open the breakdown.
+The visited-state list is
+based on your confirmation. Alaska and Hawaii appear as insets. The count is
+calculated from distinct state codes. Washington, D.C. and territories are
+excluded; they are not states. State visits do not add 50 to the country count:
+the United States is one country in `travel-countries.js`.
+The checker confirms that the all-50 milestone contains exactly the 50 states.
+Both maps share the existing Leaflet library, so there is no new runtime dependency.
+
+## Friends' travel maps
+
+The homepage's **Create your own map** link opens `/maps/`. Friends enter a
+display name, choose the countries and territories they have visited, and select
+any of the 50 U.S. states. **Save map online** keeps the map on the website so
+they can return later. Selecting a state also marks the United States visited.
+This never changes your own 39-destination list in `travel-countries.js` or
+your all-50-state list in `travel-states.js`.
+
+- **Public map link:** share this so people can view the map. The display name
+  and selected places are visible to anyone with the link.
+- **Private edit link:** copy and bookmark this to update the map later, including
+  from another device. Anyone with this link can edit or delete the map. There
+  are no accounts, passwords, or account-recovery process, so preserve this link.
+- **Show my map in Rustin's friends' maps:** optional. Leave it unchecked to keep
+  the map out of the homepage directory; the public link still works.
+- Changes are also kept as a draft in the current browser when browser storage
+  is available. A draft does not update the public map until saved online.
+  Clearing browser data can remove drafts and remembered editing access.
+
+### Preview and check map saving
+
+Run `npm run preview` as usual. It automatically uses PHP when PHP 8+ with
+PDO SQLite is installed. Without that runtime, the site and map editor still
+preview, but online saving and the friends directory are unavailable. Drafts
+can still be kept in that browser.
+
+For a portable PHP installation, set `PHP_BIN` to its executable path before
+starting the preview. If it needs extra flags, set `PHP_ARGS` to a JSON array of
+strings, for example `["-d","extension=pdo_sqlite"]`. These settings also apply to
+`npm run check:maps`, which checks saving, ownership, validation, and persistence
+using a separate temporary database. Run it after changing the saving service,
+along with the usual `npm run check` and `npm run build`.
+
+### Where friends' maps are stored
+
+The server needs PHP 8+, PDO SQLite, and permission to write in its private home
+directory. With the current DreamHost website folder, the service automatically
+creates `/home/rustin007/.rustin-travel-maps/maps.sqlite`. This is outside the
+public website, and normal deployments do not delete or replace it. Back it up
+separately; Git and the site files do not contain friends' saved maps.
+
+Local PHP previews normally store their database in `.rustin-travel-maps/` at
+the repository root, which is excluded from Git. A helper can set the server's
+`RUSTIN_MAPS_DATA_DIR` environment variable to use another private folder. The
+service rejects storage inside the public website. Keep databases, private edit
+links, and backups out of `site/` and out of Git.
 
 ## Important safety notes
 

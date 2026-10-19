@@ -116,5 +116,11 @@
   document.querySelectorAll('a[href="#"][aria-disabled="true"]').forEach((link) => {
     link.addEventListener("click", (event) => event.preventDefault());
   });
+
+  // Shared content changes section positions after the browser's first anchor jump.
+  const initialAnchor = location.hash;
+  if (initialAnchor) requestAnimationFrame(() => {
+    if (location.hash === initialAnchor) document.getElementById(initialAnchor.slice(1))?.scrollIntoView({ behavior: "instant", block: "start" });
+  });
 })();
 

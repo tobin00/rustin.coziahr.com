@@ -6,7 +6,8 @@
   "scripts": {
     "preview": "node tools/preview.mjs",
     "check": "node tools/validate.mjs",
-    "build": "node tools/build.mjs"
+    "build": "node tools/build.mjs",
+    "check:maps": "node tools/test-maps-api.mjs"
   }
 }
 

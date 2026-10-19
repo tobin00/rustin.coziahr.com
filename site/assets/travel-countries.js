@@ -1,8 +1,13 @@
-// Edit only this file to update the travel map. Use ISO two-letter country codes.
-// The visited list is intentionally empty until Rustin supplies his actual list.
-// Example only (not real travel history): visited: ["US", "JP", "FR"],
+// Edit this file to update Rustin's travel map. Use ISO two-letter country/territory codes.
+// Each distinct code counts as one destination; upcoming trips do not add to the count.
+// GB covers England and Scotland. HK, MO, TW and PR are tracked separately.
 window.RUSTIN_TRAVEL = {
-  visited: [],
+  visited: [
+    "AE", "AF", "AT", "BE", "BS", "CN", "CO", "DE", "EE", "EG", "ES", "FI", "FJ",
+    "FR", "GB", "GR", "HK", "ID", "IN", "IT", "KG", "MA", "MO", "MX", "NL", "NO",
+    "PA", "PE", "PH", "PL", "PR", "PT", "RU", "SA", "SE", "SG", "TW", "US", "VN"
+  ],
+  countryNotes: { GB: "England & Scotland" },
   showUpcoming: true,
   // Countries explicitly named in Upcoming Adventures. Cruise stops are not assumed.
   upcoming: ["US", "JP", "CL", "AQ"]

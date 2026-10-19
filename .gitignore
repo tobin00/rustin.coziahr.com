@@ -3,4 +3,10 @@ Thumbs.db
 .vscode/
 .idea/
 dist/
+.rustin-travel-maps/
+.local-data/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
 

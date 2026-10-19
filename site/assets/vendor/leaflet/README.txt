@@ -35,3 +35,14 @@ territories incorporated into a larger country's shape by Natural Earth.
 Converter and simplifier are preparation tools only, not runtime or project
 dependencies. To update boundaries, repeat this preparation from the pinned
 upstream source, preserve the licenses, and review the small-country checks.
+
+U.S. state boundaries: U.S. Atlas 3.0.1 / U.S. Census Bureau 2017 (ISC)
+Source: https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/states-albers-10m.json
+Project: https://github.com/topojson/us-atlas
+License: LICENSE-us-atlas
+Converted once with topojson-client 3.1.0, filtering to the 50 state FIPS codes
+and adding standard postal abbreviations. D.C. and territories are excluded.
+Coordinates retain the dataset's precomputed Albers USA projection, including
+Alaska/Hawaii insets in a 975 x 610 viewport, rounded to 0.01 projected units.
+Leaflet CRS.Simple displays these projected shapes without a new projection
+library or custom state geography. State data loads separately when approached.
