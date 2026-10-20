@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = path.join(repo, "site");
 const output = path.join(repo, "dist");
-const versionedAssets = ["styles.css", "content.js", "site.js", "travel-map.css", "travel-map.js", "travel-countries.js", "travel-states.js", "friends-map.css", "friends-map.js", "friends-config.js", "friends-directory.js"];
+const versionedAssets = ["styles.css", "content.js", "site.js", "travel-map.css", "travel-map.js", "travel-countries.js", "travel-states.js", "travel-regions.js", "travel-stats.js", "friends-map.css", "friends-map.js", "friends-config.js", "friends-directory.js"];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
@@ -30,7 +30,7 @@ async function versionHtml(directory) {
 
     let html = await readFile(fullPath, "utf8");
     html = html.replace(
-      /((?:\.\.\/)*assets\/(styles\.css|content\.js|site\.js|travel-map\.css|travel-map\.js|travel-countries\.js|travel-states\.js|friends-map\.css|friends-map\.js|friends-config\.js|friends-directory\.js))(?:\?v=[a-f0-9]+)?/g,
+      /((?:\.\.\/)*assets\/(styles\.css|content\.js|site\.js|travel-map\.css|travel-map\.js|travel-countries\.js|travel-states\.js|travel-regions\.js|travel-stats\.js|friends-map\.css|friends-map\.js|friends-config\.js|friends-directory\.js))(?:\?v=[a-f0-9]+)?/g,
       (_, assetPath, filename) => `${assetPath}?v=${versions.get(filename)}`
     );
     await writeFile(fullPath, html, "utf8");

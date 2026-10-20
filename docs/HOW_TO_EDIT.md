@@ -62,6 +62,14 @@ change for the map's visited list, count, and upcoming highlights.
 - Use `GB` for the United Kingdom, not `UK`. The checker catches invalid codes.
 - Each distinct visited code counts once. Countries and territories with their
   own ISO code can be tracked separately. Antarctica is `AQ`.
+- **Countries & continents** uses this same visited list to show UN member
+  countries, other destinations, and continents explored. Country totals use
+  the [193 UN member states](https://research.un.org/en/unmembers/currentmembers)
+  as their baseline. Expand a continent to see its destinations, or open
+  **Why “destinations”?** for the counting rules. Each code belongs to one
+  continent; North America includes Central America and the Caribbean.
+  The helper files `travel-regions.js` and `travel-stats.js` calculate this
+  automatically, so adding a visit still only requires `travel-countries.js`.
 - `upcoming` controls the planned destinations. It currently includes `US`,
   `JP`, `CL`, and `AQ` from the adventures you supplied. No cruise stops were
   assumed. Update this list separately when your plans change.

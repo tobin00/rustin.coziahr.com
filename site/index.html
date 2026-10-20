@@ -48,6 +48,23 @@
         </ul>
         <p class="world-help" id="world-help">Hover or tap a country for details. Click or tap the United States to explore all 50 states. Use the mouse wheel or the + and − buttons at the bottom left to zoom.</p>
         <p class="world-status visually-hidden" data-map-status role="status">Hover or tap a country to explore.</p>
+        <section class="travel-breakdown" data-travel-breakdown aria-labelledby="travel-breakdown-title">
+          <h3 id="travel-breakdown-title">Countries &amp; continents</h3>
+          <p>Countries and other destinations, grouped by continent.</p>
+          <dl class="travel-stat-grid">
+            <div><dt>UN member countries</dt><dd><strong data-travel-un-count>—</strong><span> / 193</span></dd></div>
+            <div><dt>Other destinations</dt><dd><strong data-travel-other-count>—</strong></dd></div>
+            <div><dt>Continents explored</dt><dd><strong data-travel-continent-count>—</strong><span> / 7</span></dd></div>
+          </dl>
+          <div class="travel-continent-grid" data-travel-continent-list><p>Loading destinations by continent…</p></div>
+          <details class="travel-counting-notes">
+            <summary>Why “destinations”?</summary>
+            <p>I use “destinations” because this map includes countries plus territories and other separately tracked places, such as Hong Kong, Macau, Taiwan, and Puerto Rico.</p>
+            <p>The country count uses the <a href="https://research.un.org/en/unmembers/currentmembers" target="_blank" rel="noreferrer">193 United Nations member states</a> as its baseline. The remaining entries are labeled “Other destination” in the lists.</p>
+            <p>Each destination code counts once. England and Scotland share the United Kingdom’s code, GB. U.S. states stay in their own breakdown, and upcoming trips add no visits.</p>
+            <p>Each destination belongs to one continent for this list. North America includes Central America and the Caribbean.</p>
+          </details>
+        </section>
         <details class="world-country-list"><summary>Destinations I’ve explored — text list</summary><div data-visited-list>Loading explored destinations…</div></details>
         <noscript><p>The interactive map and country list need JavaScript.</p></noscript>
         </div>
@@ -92,6 +109,8 @@
   <script src="assets/content.js"></script>
   <script src="assets/site.js"></script>
   <script src="assets/travel-countries.js"></script>
+  <script src="assets/travel-regions.js"></script>
+  <script src="assets/travel-stats.js"></script>
   <script src="assets/travel-states.js"></script>
   <script src="assets/travel-map.js"></script>
   <script src="assets/friends-directory.js"></script>

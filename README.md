@@ -24,6 +24,7 @@ Setting up a new Windows laptop? Start with [docs/LAPTOP_SETUP.md](docs/LAPTOP_S
 - `site/testing/options/` — the four full-page testing designs
 - `site/assets/content.js` — Rustin's words, hobbies, and social links
 - `site/assets/travel-countries.js` — visited country codes and upcoming map highlights
+- `site/assets/travel-regions.js` and `travel-stats.js` — continent groups and country totals derived from that same visited list
 - `site/assets/travel-states.js` — the separate list of all 50 visited U.S. states
 - `site/assets/travel-map.js` and `travel-map.css` — the interactive Countries Visited map
 - `site/maps/index.html` — create, view, and update a friend's travel map
@@ -72,6 +73,9 @@ its upcoming status remains in the tooltip. Upcoming trips never add to the
 explored count. The main world map keeps its original roomy proportions, with
 Antarctica in a separate small polar inset. Antarctica remains selectable, with
 a tooltip and the usual country-list and visited-count rules.
+The personal map's **Countries & continents** section separates UN member
+countries from other destinations and groups the visited list by continent.
+These totals update automatically when the visited codes change.
 
 The service needs PHP 8+, PDO SQLite, and a writable private home directory.
 On the current DreamHost setup, friends' maps are stored in

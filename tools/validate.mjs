@@ -7,6 +7,7 @@ const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const required = [
   "site/index.html", "site/testing/index.html", "site/assets/content.js", "site/assets/site.js", "site/assets/styles.css",
   "site/assets/travel-map.js", "site/assets/travel-map.css", "site/assets/travel-countries.js",
+  "site/assets/travel-regions.js", "site/assets/travel-stats.js",
   "site/assets/travel-states.js", "site/assets/vendor/leaflet/us-states-albers.json",
   "site/assets/vendor/leaflet/leaflet-1.9.4.js", "site/assets/vendor/leaflet/leaflet-1.9.4.css",
   "site/assets/vendor/leaflet/countries.geo.json", "site/assets/vendor/leaflet/iso-codes.json",
@@ -28,13 +29,28 @@ const styles = await readFile(path.join(repo, "site/assets/styles.css"), "utf8")
 for (const number of [1, 2, 3, 4]) if (!styles.includes(`data-design=\"${number}\"`)) errors.push(`Missing CSS for design ${number}`);
 
 try {
-  for (const filename of ["content.js", "site.js", "travel-countries.js", "travel-states.js", "travel-map.js", "friends-map.js", "friends-config.js", "friends-directory.js"]) {
+  for (const filename of ["content.js", "site.js", "travel-countries.js", "travel-states.js", "travel-map.js", "travel-regions.js", "travel-stats.js", "friends-map.js", "friends-config.js", "friends-directory.js"]) {
     new Script(await readFile(path.join(repo, "site/assets", filename), "utf8"), { filename });
   }
   const sandbox = { window: {} };
   runInNewContext(await readFile(path.join(repo, "site/assets/travel-countries.js"), "utf8"), sandbox);
   const travel = sandbox.window.RUSTIN_TRAVEL;
   const codes = new Set(JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/iso-codes.json"), "utf8")));
+  runInNewContext(await readFile(path.join(repo, "site/assets/travel-regions.js"), "utf8"), sandbox);
+  const regions = sandbox.window.RUSTIN_REGIONS;
+  const continentNames = new Set(["Africa", "Antarctica", "Asia", "Europe", "North America", "Oceania", "South America"]);
+  if (Object.keys(regions).length !== codes.size || [...codes].some((code) => !regions[code])) errors.push("Travel classification must cover the complete ISO destination catalog.");
+  if (Object.values(regions).some((region) => !continentNames.has(region.continent) || typeof region.unMember !== "boolean")) errors.push("Every destination needs a valid continent and UN-membership flag.");
+  if (Object.values(regions).filter((region) => region.unMember).length !== 193) errors.push("The country baseline must contain the 193 UN member states.");
+  runInNewContext(await readFile(path.join(repo, "site/assets/travel-stats.js"), "utf8"), { window: sandbox.window, document: { querySelector: () => null } });
+  const summarize = sandbox.window.RustinTravelStats.summarize;
+  const fixture = summarize(["us", " US ", "PR", "TW", "AQ", "US"]);
+  if (fixture.destinations !== 4 || fixture.unMembers !== 1 || fixture.otherDestinations !== 3 || fixture.continents !== 3) errors.push("Travel totals must deduplicate visits and distinguish UN countries, other destinations, and continents.");
+  const emptyStats = summarize([]);
+  if (emptyStats.destinations || emptyStats.unMembers || emptyStats.otherDestinations || emptyStats.continents) errors.push("An empty visited list must have zero totals.");
+  let rejectsUnknown = false;
+  try { summarize(["ZZ"]); } catch { rejectsUnknown = true; }
+  if (!rejectsUnknown) errors.push("Unknown destinations must not silently disappear from the continent breakdown.");
   for (const field of ["visited", "upcoming"]) {
     if (!Array.isArray(travel[field])) throw new Error(`Travel ${field} must be a list.`);
     for (const code of travel[field]) {
@@ -81,9 +97,11 @@ try {
     if (!/<section\b[^>]*id="united-states"[^>]*\bhidden>/.test(html)) errors.push(`${page}: the state breakdown must start hidden.`);
     if (!html.includes("data-world-overview") || !html.includes("data-back-world")) errors.push(`${page}: world/state navigation is missing.`);
     if (!html.includes('id="create-map"') || !html.includes('id="friends-maps"')) errors.push(`${page}: community map sections are missing.`);
-    for (const asset of ["travel-map.css", "travel-countries.js", "travel-states.js", "travel-map.js"]) {
+    if (!html.includes("data-travel-breakdown")) errors.push(`${page}: the countries and continents breakdown is missing.`);
+    for (const asset of ["travel-map.css", "travel-countries.js", "travel-states.js", "travel-map.js", "travel-regions.js", "travel-stats.js"]) {
       if (!html.includes(asset)) errors.push(`${page} does not load ${asset}.`);
     }
+    if (html.indexOf("travel-regions.js") > html.indexOf("travel-stats.js")) errors.push(`${page}: travel classification must load before the statistics.`);
   }
   const mapPage = await readFile(path.join(repo, "site/maps/index.html"), "utf8");
   for (const asset of ["friends-config.js", "friends-map.js", "travel-map.js", "friends-map.css"]) {
