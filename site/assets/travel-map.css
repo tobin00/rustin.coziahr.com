@@ -13,6 +13,12 @@
 .world-loading { position: absolute; inset: 0; display: grid; place-content: center; margin: 0; padding: 1rem; text-align: center; }
 .world-section .travel-map.leaflet-container { background: var(--world-ocean); font: inherit; height: clamp(300px, 48vw, 590px); aspect-ratio: auto; z-index: 0; touch-action: pan-y pinch-zoom; }
 .world-section .travel-map.is-moving { touch-action: none; }
+.world-section .travel-map.leaflet-grab,
+.world-section .travel-map.leaflet-grab .leaflet-interactive { cursor: grab; }
+.world-section .travel-map.leaflet-grab:active,
+.world-section .travel-map.leaflet-grab:active .leaflet-interactive,
+.leaflet-dragging .world-section .travel-map.leaflet-grab,
+.leaflet-dragging .world-section .travel-map.leaflet-grab .leaflet-interactive { cursor: grabbing; }
 .world-section .travel-map .leaflet-interactive { transition: fill-opacity .18s ease, stroke .18s ease; outline: none; }
 .world-section .travel-map .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; color: #263546; background: #f7f3e8; }
 .world-section .travel-map .leaflet-control-zoom a:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }

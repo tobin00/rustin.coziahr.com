@@ -165,12 +165,25 @@
           zoomSnap: 0, zoomDelta: 0.75, minZoom: -5, maxZoom: settings.uk ? 12 : settings.states ? 4 : 8,
           scrollWheelZoom: true, wheelPxPerZoomLevel: 90,
           doubleClickZoom: false, touchZoom: false, boxZoom: false,
-          dragging: false, keyboard: true, zoomAnimation: !reducedMotion,
+          dragging: true, keyboard: true, zoomAnimation: !reducedMotion,
           fadeAnimation: !reducedMotion, inertia: false, attributionControl: false,
           maxBounds: regional ? homeBounds.pad(0.15) : [[-105, -200], [105, 200]], maxBoundsViscosity: 1
         });
         map.zoomControl.setPosition("bottomleft");
-        host.setAttribute("aria-label", (settings.uk ? "UK constituent country travel map" : settings.states ? "U.S. state travel map" : "World travel map") + ". Use the mouse wheel or the bottom-left plus and minus buttons to zoom; arrow keys pan. " + (picker ? "Use the selector for a text alternative." : "Explored places are listed below."));
+        let moving = false;
+        // Use Leaflet's own mouse drag handler. Touch keeps normal page scrolling
+        // unless the visitor explicitly enables the friends' Move map control.
+        // Capture runs before Leaflet handles the same press, including on laptops
+        // with both a touchscreen and a mouse. Keep its drag/click tolerance intact.
+        function allowDragging(isMouse) {
+          if (isMouse || moving) map.dragging.enable();
+          else map.dragging.disable();
+        }
+        host.addEventListener("pointerenter", (event) => allowDragging(event.pointerType === "mouse"));
+        host.addEventListener("pointerdown", (event) => allowDragging(event.pointerType === "mouse"), { capture: true, passive: true });
+        host.addEventListener("touchstart", () => allowDragging(false), { capture: true, passive: true });
+        host.addEventListener("mousedown", () => allowDragging(true), { capture: true, passive: true });
+        host.setAttribute("aria-label", (settings.uk ? "UK constituent country travel map" : settings.states ? "U.S. state travel map" : "World travel map") + ". Left-click and drag to pan. Use the mouse wheel or the bottom-left plus and minus buttons to zoom; arrow keys pan. " + (picker ? "Use the selector for a text alternative." : "Explored places are listed below."));
         const layers = new Map();
         let selectedCode;
         let antarcticaInset;
@@ -368,7 +381,6 @@
           resetButton.hidden = false;
           resetButton.addEventListener("click", reset);
         }
-        let moving = false;
         if (moveButton) {
           moveButton.hidden = false;
           moveButton.addEventListener("click", () => {

@@ -94,9 +94,10 @@ the + and − zoom buttons at the bottom left, the U.S. state and UK country
 breakdowns with back buttons, the legend, and the expandable explored-place lists. The text lists provide a
 keyboard and screen-reader alternative. These personal views use a simpler
 layout without country/state selectors, reset or “Move map” controls, or a
-visible source-credit footer. On a computer, the mouse wheel zooms when the
-pointer is over the main world, U.S. state, or UK map. Move the pointer outside the
-map to scroll the page. Phone swipes still scroll the page normally; the small
+visible source-credit footer. On a computer, left-click and drag to pan the
+main world, U.S. state, or UK map. The mouse wheel and the + and − buttons at the
+bottom left zoom the map. Move the pointer outside the map to scroll the page.
+Phone swipes still scroll the page normally; the small
 Antarctica inset does not use mouse-wheel zoom.
 
 The map uses local Leaflet files and prepared Natural Earth boundaries. The main
@@ -161,11 +162,12 @@ your all-50-state list in `travel-states.js`.
 The `/maps/` creator and shared-map views keep their country/state selectors,
 reset buttons, “Move map” controls, and visible source credits. Their selectors
 and expandable text lists offer keyboard and screen-reader alternatives.
-Normal swipes scroll the page; “Move map” enables dragging and pinch zoom,
-and “Done moving map” turns those off. The mouse wheel zooms over the main world
-or U.S. state map in either mode, and the + and − buttons remain at the bottom
-left. Move the pointer outside the map to scroll the page. Phone swipes scroll
-normally while “Move map” is off. Selectors also work in either mode; selecting
+On a computer, left-click and drag to pan the main world or U.S. state map.
+The mouse wheel and the + and − buttons at the bottom left zoom in either mode.
+Move the pointer outside the map to scroll the page. On a phone, normal swipes
+scroll the page; “Move map” enables touch dragging and pinch zoom, and
+“Done moving map” turns those off to restore page scrolling. Mouse dragging
+works in either mode. Selectors also work in either mode; selecting
 the United States opens the state breakdown.
 
 - **Public map link:** share this so people can view the map. The display name
