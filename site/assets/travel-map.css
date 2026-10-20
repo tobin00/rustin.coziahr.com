@@ -33,7 +33,7 @@
 .antarctica-caption { text-align: center; }
 .antarctica-caption h3 { margin: .2rem 0; font-size: .85rem; letter-spacing: 0; }
 .antarctica-caption p { margin: 0; font-size: .7rem; line-height: 1.4; }
-.world-tooltip-content { display: grid; gap: .35rem; padding: .8rem 1rem; max-width: min(280px, 80vw); color: #07111f; font: .9rem/1.4 "DM Sans", sans-serif; text-align: center; }
+.world-tooltip-content { display: grid; gap: .35rem; width: max-content; padding: .8rem 1rem; max-width: min(280px, 80vw); color: #07111f; font: .9rem/1.4 "DM Sans", sans-serif; text-align: center; white-space: normal; overflow-wrap: anywhere; }
 .world-tooltip-content strong { font-size: 1rem; }
 .world-legend { display: flex; flex-wrap: wrap; gap: 1.3rem; list-style: none; padding: 0; margin: 1.25rem 0; font-size: .85rem; }
 .world-legend li { display: flex; align-items: center; gap: .5rem; }
