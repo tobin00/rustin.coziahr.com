@@ -79,7 +79,7 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 .travel-breakdown { margin: 2rem 0; padding-top: 1.75rem; border-top: 1px solid var(--world-border); }
 .travel-breakdown > h3 { margin: 0; font-size: clamp(1.25rem, 2.5vw, 1.6rem); letter-spacing: -.025em; }
 .travel-breakdown > p { margin: .65rem 0 1.5rem; line-height: 1.6; }
-.travel-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: 0 0 1.25rem; }
+.travel-stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin: 0 0 1.25rem; }
 .travel-stat-grid > div { min-width: 0; padding: 1rem 1.1rem; border: 1px solid var(--world-border); border-radius: .45rem; background: var(--world-ocean); }
 .travel-stat-grid dt { font-size: .8rem; font-weight: 700; line-height: 1.5; }
 .travel-stat-grid dd { margin: .65rem 0 0; }
@@ -102,6 +102,9 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 .travel-counting-notes p { max-width: 64rem; margin: .65rem 0; font-size: .85rem; line-height: 1.65; }
 .travel-counting-notes a { text-underline-offset: .15em; }
 .travel-breakdown summary:focus-visible, .travel-counting-notes a:focus-visible { outline: 2px solid var(--world-visited); outline-offset: 3px; border-radius: .2rem; }
+@media (min-width: 601px) and (max-width: 900px) {
+  .travel-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 600px) {
   .travel-stat-grid { grid-template-columns: 1fr; gap: .5rem; }
   .travel-stat-grid > div { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .75rem 1rem; }

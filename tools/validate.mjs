@@ -98,10 +98,12 @@ try {
     if (!html.includes("data-world-overview") || !html.includes("data-back-world")) errors.push(`${page}: world/state navigation is missing.`);
     if (!html.includes('id="create-map"') || !html.includes('id="friends-maps"')) errors.push(`${page}: community map sections are missing.`);
     if (!html.includes("data-travel-breakdown")) errors.push(`${page}: the countries and continents breakdown is missing.`);
+    if (!html.includes("data-travel-state-count")) errors.push(`${page}: the U.S. states summary counter is missing.`);
     for (const asset of ["travel-map.css", "travel-countries.js", "travel-states.js", "travel-map.js", "travel-regions.js", "travel-stats.js"]) {
       if (!html.includes(asset)) errors.push(`${page} does not load ${asset}.`);
     }
     if (html.indexOf("travel-regions.js") > html.indexOf("travel-stats.js")) errors.push(`${page}: travel classification must load before the statistics.`);
+    if (html.indexOf("travel-states.js") > html.indexOf("travel-stats.js")) errors.push(`${page}: visited states must load before the statistics.`);
   }
   const mapPage = await readFile(path.join(repo, "site/maps/index.html"), "utf8");
   for (const asset of ["friends-config.js", "friends-map.js", "travel-map.js", "friends-map.css"]) {

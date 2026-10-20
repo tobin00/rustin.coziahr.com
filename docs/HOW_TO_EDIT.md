@@ -120,6 +120,8 @@ based on your confirmation. Alaska and Hawaii appear as insets. The count is
 calculated from distinct state codes. Washington, D.C. and territories are
 excluded; they are not states. State visits do not add 50 to the country count:
 the United States is one country in `travel-countries.js`.
+The **U.S. states** counter beside the country and continent totals also uses
+this same state list and currently shows **50 / 50**.
 The checker confirms that the all-50 milestone contains exactly the 50 states.
 Both maps share the existing Leaflet library, so there is no new runtime dependency.
 

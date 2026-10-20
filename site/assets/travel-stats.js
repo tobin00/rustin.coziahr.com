@@ -43,6 +43,7 @@
       section.querySelector("[data-travel-un-count]").textContent = stats.unMembers;
       section.querySelector("[data-travel-other-count]").textContent = stats.otherDestinations;
       section.querySelector("[data-travel-continent-count]").textContent = stats.continents;
+      section.querySelector("[data-travel-state-count]").textContent = new Set(window.RUSTIN_STATES?.visited || []).size;
       const fragment = document.createDocumentFragment();
       for (const group of stats.groups) {
         const details = document.createElement("details");
