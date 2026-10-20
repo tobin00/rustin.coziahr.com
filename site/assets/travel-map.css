@@ -18,7 +18,7 @@
 .world-section .travel-map.leaflet-grab:active,
 .world-section .travel-map.leaflet-grab:active .leaflet-interactive,
 .leaflet-dragging .world-section .travel-map.leaflet-grab,
-.leaflet-dragging .world-section .travel-map.leaflet-grab .leaflet-interactive { cursor: grabbing; }
+.leaflet-dragging .world-section .travel-map.leaflet-grab .leaflet-interactive { cursor: default; }
 .world-section .travel-map .leaflet-interactive { transition: fill-opacity .18s ease, stroke .18s ease; outline: none; }
 .world-section .travel-map .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; color: #263546; background: #f7f3e8; }
 .world-section .travel-map .leaflet-control-zoom a:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }
@@ -136,7 +136,6 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 .travel-globe { position: relative; width: 100%; height: clamp(360px, 55vw, 590px); min-height: 360px; overflow: hidden; background: var(--world-ocean); touch-action: pan-y pinch-zoom; }
 .travel-globe-svg { display: block; width: 100%; height: 100%; overflow: hidden; cursor: default; touch-action: pan-y pinch-zoom; }
 .travel-globe-svg:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: -5px; }
-.travel-globe.is-globe-dragging .travel-globe-svg, .travel-globe.is-globe-dragging .globe-country { cursor: grabbing; }
 .travel-globe.is-touch-enabled, .travel-globe.is-touch-enabled .travel-globe-svg { touch-action: none; }
 .globe-ocean { stroke-width: 1.5; }
 .globe-graticule { fill: none; stroke-width: .5; opacity: .6; pointer-events: none; }
