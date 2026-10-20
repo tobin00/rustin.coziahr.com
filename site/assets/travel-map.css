@@ -112,6 +112,9 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 .travel-counting-notes > summary { min-height: 44px; padding: .7rem 0; font-size: .85rem; font-weight: 700; cursor: pointer; }
 .travel-counting-notes p { max-width: 64rem; margin: .65rem 0; font-size: .85rem; line-height: 1.65; }
 .travel-counting-notes a { text-underline-offset: .15em; }
+.travel-details-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: .75rem 2rem; margin-top: 1.25rem; }
+.travel-details-grid > details { min-width: 0; margin: 0; }
+.travel-details-grid > details > summary { min-height: 44px; padding: .7rem 0; font: inherit; font-size: .85rem; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; cursor: pointer; }
 .travel-place-button { min-height: 44px; padding: .2rem 0; background: transparent; color: inherit; border: 0; font: inherit; text-align: left; text-decoration: underline; text-underline-offset: .15em; cursor: pointer; }
 .travel-place-button:focus-visible { outline: 2px solid var(--world-visited); outline-offset: 3px; border-radius: .2rem; }
 .travel-breakdown summary:focus-visible, .travel-counting-notes a:focus-visible { outline: 2px solid var(--world-visited); outline-offset: 3px; border-radius: .2rem; }
