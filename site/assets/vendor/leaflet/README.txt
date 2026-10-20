@@ -24,6 +24,28 @@ Longitude seams were normalized with D3 7.9.0 and d3-geo-projection 4.0.0
 antimeridian-crossing polygons, avoiding lines across Russia and Fiji.
 These D3 packages are also preparation tools only, not visitor dependencies.
 
+Caribbean map units (public domain, Natural Earth 1:10m)
+Source: https://github.com/nvkelso/natural-earth-vector
+Pinned commit: 117488dc884bad03366ff727eca013e434615127
+Exact source file:
+https://raw.githubusercontent.com/nvkelso/natural-earth-vector/117488dc884bad03366ff727eca013e434615127/geojson/ne_10m_admin_0_map_units.geojson
+SHA-256: 57da82be755f4afccd8f3b14251bb2752f5df1395f47d2d86f817470c4a48862
+The source ISO_A2_EH field identifies Guadeloupe (GP), Martinique (MQ), and
+Caribbean Netherlands (BQ). tools/prepare-caribbean-map.mjs separates the
+three existing French island polygons (two GP, one MQ) into their own features.
+Those coordinates are moved intact, so France does not overlap the new regions.
+All remaining France polygons and every other existing feature stay unchanged.
+BQ adds the source's three polygons for Bonaire, Sint Eustatius, and Saba,
+rounded to the asset's existing 0.001-degree precision. No boundary is invented.
+The preparation script verifies the pinned source checksum, region identities,
+polygon counts, exact preservation of all other features, and unchanged France
+coordinates outside the moved islands. It does not fetch data or add dependencies.
+To reproduce, download the exact source to a preparation folder, then run:
+  node tools/prepare-caribbean-map.mjs --source C:/prep/map-units.geojson
+An already prepared asset is validated without being rewritten. Rebuilding the
+world asset from its original World Atlas source requires applying this step
+again. The new regions add about 1.4 KB, and no upstream file is shipped to visitors.
+
 Antarctica inset asset: antarctica-polar.json
 The main world map keeps its familiar equirectangular country shapes.
 Antarctica is also available as a compact South Pole inset, prepared from the

@@ -95,7 +95,7 @@
             loadAsset("link", "vendor/leaflet/leaflet-1.9.4.css"),
             loadAsset("script", "vendor/leaflet/leaflet-1.9.4.js")
           ]),
-          fetch(new URL("vendor/leaflet/" + settings.geography, assets)).then((response) => {
+          fetch(new URL("vendor/leaflet/" + settings.geography, assets), { cache: "no-cache" }).then((response) => {
             if (!response.ok) throw new Error("Country boundaries could not load");
             return response.json();
           }),

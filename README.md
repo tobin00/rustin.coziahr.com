@@ -65,7 +65,7 @@ At `/maps/`, friends choose countries, territories, and any of the 50 U.S. state
 then save their own map online. A public link lets others view it; a private edit
 link lets its owner return and update it. Appearing in Rustin's friends list is
 optional. Keep the private link safe: there are no accounts or recovery service.
-Rustin's own 43 destinations remain managed in `site/assets/travel-countries.js`.
+Rustin's own 66 destinations remain managed in `site/assets/travel-countries.js`.
 New upcoming destinations have a solid orange fill; return visits keep their
 visited fill with an orange outline. The United States keeps a neutral border;
 its upcoming status remains in the tooltip. Upcoming trips never add to the

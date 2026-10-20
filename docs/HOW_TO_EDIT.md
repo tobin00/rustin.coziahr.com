@@ -39,12 +39,18 @@ Publishing means the assistant checks the site, saves a Git commit, and pushes i
 Open `site/assets/travel-countries.js`. This is the only file you need to
 change for the map's visited list, count, and upcoming highlights.
 
-- `visited` currently records your 43 confirmed destinations. The count says
+- `visited` currently records your 66 confirmed destinations. The count says
   **Destinations Explored** because it includes countries and separately tracked
   territories. Hong Kong (`HK`), Macau (`MO`), Taiwan (`TW`), and Puerto Rico (`PR`)
   each have their own region. `GB` covers the United Kingdom; the map note names
   England and Scotland. The United States (`US`) counts as one destination,
   while its breakout separately shows all 50 states you have visited.
+- Your Caribbean list includes 26 countries and territories from the
+  [UN Caribbean region](https://unstats.un.org/unsd/methodology/m49/overview/).
+  Cuba (`CU`) and Haiti (`HT`) remain unvisited. Bonaire, Sint Eustatius and Saba share
+  one destination code (`BQ`); the French and Dutch sides of Saint Martin
+  use separate codes (`MF` and `SX`), as do the British and U.S. Virgin
+  Islands (`VG` and `VI`).
 - Put uppercase ISO two-letter country codes inside the brackets, in quotes,
   separated by commas. For example only: `visited: ["US", "JP", "FR"],`.
   That example means United States, Japan, and France; it is not your actual list.
@@ -107,7 +113,7 @@ The homepage's **Create your own map** link opens `/maps/`. Friends enter a
 display name, choose the countries and territories they have visited, and select
 any of the 50 U.S. states. **Save map online** keeps the map on the website so
 they can return later. Selecting a state also marks the United States visited.
-This never changes your own 43-destination list in `travel-countries.js` or
+This never changes your own 66-destination list in `travel-countries.js` or
 your all-50-state list in `travel-states.js`.
 
 The `/maps/` creator and shared-map views keep their country/state selectors,
