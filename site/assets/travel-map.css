@@ -24,7 +24,8 @@
 .world-legend li { display: flex; align-items: center; gap: .5rem; }
 .world-swatch { width: .85rem; height: .85rem; border-radius: 2px; background: var(--world-unvisited); }
 .world-swatch.visited { background: var(--world-visited); }
-.world-swatch.upcoming { background: transparent; border: 2px solid var(--world-upcoming); }
+.world-swatch.upcoming { background: var(--world-upcoming); }
+.world-swatch.visited-upcoming { background: var(--world-visited); border: 2px solid var(--world-upcoming); }
 .world-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.5rem; }
 .world-tools label { font-weight: 700; }
 .world-tools select, .world-tools button { min-height: 44px; max-width: 100%; padding: .65rem .8rem; border: 1px solid var(--world-border); border-radius: .25rem; font: inherit; }

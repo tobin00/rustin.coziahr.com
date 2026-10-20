@@ -23,7 +23,7 @@ Setting up a new Windows laptop? Start with [docs/LAPTOP_SETUP.md](docs/LAPTOP_S
 - `site/testing/index.html` — the design chooser
 - `site/testing/options/` — the four full-page testing designs
 - `site/assets/content.js` — Rustin's words, hobbies, and social links
-- `site/assets/travel-countries.js` — visited country codes and upcoming map outlines
+- `site/assets/travel-countries.js` — visited country codes and upcoming map highlights
 - `site/assets/travel-states.js` — the separate list of all 50 visited U.S. states
 - `site/assets/travel-map.js` and `travel-map.css` — the interactive Around the world map
 - `site/maps/index.html` — create, view, and update a friend's travel map
@@ -65,7 +65,9 @@ At `/maps/`, friends choose countries, territories, and any of the 50 U.S. state
 then save their own map online. A public link lets others view it; a private edit
 link lets its owner return and update it. Appearing in Rustin's friends list is
 optional. Keep the private link safe: there are no accounts or recovery service.
-Rustin's own 39 destinations remain managed in `site/assets/travel-countries.js`.
+Rustin's own 41 destinations remain managed in `site/assets/travel-countries.js`.
+New upcoming destinations have a solid orange fill; return visits keep their
+visited fill with an orange outline. Upcoming trips never add to the explored count.
 
 The service needs PHP 8+, PDO SQLite, and a writable private home directory.
 On the current DreamHost setup, friends' maps are stored in

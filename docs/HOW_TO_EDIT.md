@@ -37,9 +37,9 @@ Publishing means the assistant checks the site, saves a Git commit, and pushes i
 ## Update the travel map
 
 Open `site/assets/travel-countries.js`. This is the only file you need to
-change for the map's visited list, count, and upcoming outlines.
+change for the map's visited list, count, and upcoming highlights.
 
-- `visited` currently records your 39 confirmed destinations. The count says
+- `visited` currently records your 41 confirmed destinations. The count says
   **Destinations Explored** because it includes countries and separately tracked
   territories. Hong Kong (`HK`), Macau (`MO`), Taiwan (`TW`), and Puerto Rico (`PR`)
   each have their own region. `GB` covers the United Kingdom; the map note names
@@ -51,12 +51,14 @@ change for the map's visited list, count, and upcoming outlines.
 - Use `GB` for the United Kingdom, not `UK`. The checker catches invalid codes.
 - Each distinct visited code counts once. Countries and territories with their
   own ISO code can be tracked separately. Antarctica is `AQ`.
-- `upcoming` controls the outlined destinations. It currently includes `US`,
+- `upcoming` controls the planned destinations. It currently includes `US`,
   `JP`, `CL`, and `AQ` from the adventures you supplied. No cruise stops were
   assumed. Update this list separately when your plans change.
-- Set `showUpcoming: false` to hide upcoming outlines and their legend.
-- Upcoming countries never add to the visited count. A code in both lists
-  keeps its visited fill and also gets an upcoming outline. No dates appear
+- New upcoming destinations have a solid orange fill. Destinations in both
+  `visited` and `upcoming` keep their visited fill with an orange outline,
+  shown in the legend as **Visited & Upcoming**.
+- Set `showUpcoming: false` to hide upcoming highlights and both upcoming legend items.
+- Upcoming destinations never add to the visited count. No dates appear
   on the map. Your homepage map remains read-only; friends edit their own maps
   on the separate `/maps/` page.
 
@@ -93,7 +95,7 @@ The homepage's **Create your own map** link opens `/maps/`. Friends enter a
 display name, choose the countries and territories they have visited, and select
 any of the 50 U.S. states. **Save map online** keeps the map on the website so
 they can return later. Selecting a state also marks the United States visited.
-This never changes your own 39-destination list in `travel-countries.js` or
+This never changes your own 41-destination list in `travel-countries.js` or
 your all-50-state list in `travel-states.js`.
 
 - **Public map link:** share this so people can view the map. The display name

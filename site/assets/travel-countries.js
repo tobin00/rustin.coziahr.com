@@ -3,8 +3,8 @@
 // GB covers England and Scotland. HK, MO, TW and PR are tracked separately.
 window.RUSTIN_TRAVEL = {
   visited: [
-    "AE", "AF", "AT", "BE", "BS", "CN", "CO", "DE", "EE", "EG", "ES", "FI", "FJ",
-    "FR", "GB", "GR", "HK", "ID", "IN", "IT", "KG", "MA", "MO", "MX", "NL", "NO",
+    "AE", "AF", "AT", "BE", "BS", "CA", "CN", "CO", "DE", "EE", "EG", "ES", "FI", "FJ",
+    "FR", "GB", "GR", "HK", "ID", "IN", "IT", "JM", "KG", "MA", "MO", "MX", "NL", "NO",
     "PA", "PE", "PH", "PL", "PR", "PT", "RU", "SA", "SE", "SG", "TW", "US", "VN"
   ],
   countryNotes: { GB: "England & Scotland" },

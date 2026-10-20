@@ -55,8 +55,7 @@
     const host = section.querySelector(".travel-map");
     const countLabel = section.querySelector("[data-map-count-label]");
     if (countLabel) countLabel.textContent = settings.states ? "States Explored" : "Destinations Explored";
-    const upcomingLegend = section.querySelector("[data-upcoming-legend]");
-    if (upcomingLegend) upcomingLegend.hidden = !config.showUpcoming;
+    section.querySelectorAll("[data-upcoming-legend]").forEach((item) => { item.hidden = !config.showUpcoming; });
     let refreshMap;
     let placeName = (code) => {
       const name = settings.states ? code : (code === "MO" ? "Macau" : names.of(code));
@@ -138,12 +137,18 @@
         host.setAttribute("aria-label", (settings.states ? "U.S. state travel map" : "World travel map") + ". Use arrow keys to pan, plus and minus to zoom, or the selector for a text alternative.");
         const layers = new Map();
         let selectedCode;
-        const baseStyle = (feature) => ({
-          fillColor: color(visited.has(feature.properties.code) ? "--world-visited" : "--world-unvisited"),
-          fillOpacity: 1,
-          color: color(upcoming.has(feature.properties.code) ? "--world-upcoming" : "--world-border"),
-          opacity: 1, weight: upcoming.has(feature.properties.code) ? 1.6 : 0.65
-        });
+        const baseStyle = (feature) => {
+          const code = feature.properties.code;
+          const wasVisited = visited.has(code);
+          const isUpcoming = upcoming.has(code);
+          const returning = wasVisited && isUpcoming;
+          return {
+            fillColor: color(wasVisited ? "--world-visited" : isUpcoming ? "--world-upcoming" : "--world-unvisited"),
+            fillOpacity: 1,
+            color: color(returning ? "--world-upcoming" : "--world-border"),
+            opacity: 1, weight: returning ? 1.6 : 0.65
+          };
+        };
         function tooltipContent(code, name) {
           const content = document.createElement("div");
           content.className = "world-tooltip-content";
