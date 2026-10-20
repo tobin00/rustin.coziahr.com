@@ -67,10 +67,12 @@ change for the map's visited list, count, and upcoming highlights.
 
 Refresh the local preview to see your changes, run `npm run check`, and ask
 to publish when ready. The published site changes only after publishing.
-The country selector and expandable text list provide a keyboard and screen
-reader alternative. Normal swipes scroll the page; “Move map” explicitly
-enables dragging and pinch zoom. “Done moving map” restores
-normal scrolling. Zoom buttons and the country selector work in either mode.
+The homepage and all four personal testing designs keep hover/tap details,
+the + and − zoom buttons, the U.S. state breakdown and its back button, the
+legend, and the expandable explored-place lists. The text lists provide a
+keyboard and screen-reader alternative. These personal views use a simpler
+layout without country/state selectors, reset or “Move map” controls, or a
+visible source-credit footer. Normal swipes scroll the page.
 
 The map uses local Leaflet files and prepared Natural Earth boundaries. The main
 world view keeps its original roomy, equirectangular proportions. Antarctica
@@ -87,7 +89,7 @@ licenses are in `site/assets/vendor/leaflet/`. Keep those files intact.
 The separate **Across the United States** breakout uses
 `site/assets/travel-states.js`. All 50 state postal codes are listed as visited,
 and this breakout stays hidden until someone clicks or taps the United States
-on the world map (or selects it in “Find a country”). “Back to world map” or
+on the world map. “Back to world map” or
 Escape returns to the world view. Only one map is shown at a time. State
 boundaries load on demand when the breakout opens. The country shape also
 supports keyboard focus and Enter/Space to open the breakdown.
@@ -107,6 +109,13 @@ any of the 50 U.S. states. **Save map online** keeps the map on the website so
 they can return later. Selecting a state also marks the United States visited.
 This never changes your own 43-destination list in `travel-countries.js` or
 your all-50-state list in `travel-states.js`.
+
+The `/maps/` creator and shared-map views keep their country/state selectors,
+reset buttons, “Move map” controls, and visible source credits. Their selectors
+and expandable text lists offer keyboard and screen-reader alternatives.
+Normal swipes scroll the page; “Move map” enables dragging and pinch zoom,
+and “Done moving map” restores page scrolling. Zoom buttons and selectors work
+in either mode. Selecting the United States also opens the state breakdown.
 
 - **Public map link:** share this so people can view the map. The display name
   and selected places are visible to anyone with the link.

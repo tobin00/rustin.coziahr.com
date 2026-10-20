@@ -49,9 +49,10 @@
     const names = new Intl.DisplayNames(["en"], { type: "region" });
     const count = section.querySelector("[data-map-count]");
     const status = section.querySelector("[data-map-status]");
-    const picker = section.querySelector("[data-map-picker]");
+    const controls = settings.states ? section : section.querySelector("[data-world-overview]") || section;
+    const picker = controls.querySelector("[data-map-picker]");
     const list = section.querySelector("[data-visited-list]");
-    const moveButton = section.querySelector("[data-move-map]");
+    const moveButton = controls.querySelector("[data-move-map]");
     const host = section.querySelector(".travel-map");
     const countLabel = section.querySelector("[data-map-count-label]");
     if (countLabel) countLabel.textContent = settings.states ? "States Explored" : "Destinations Explored";
@@ -138,7 +139,7 @@
           fadeAnimation: !reducedMotion, inertia: false, attributionControl: false,
           maxBounds: settings.states ? homeBounds.pad(0.15) : [[-105, -200], [105, 200]], maxBoundsViscosity: 1
         });
-        host.setAttribute("aria-label", (settings.states ? "U.S. state travel map" : "World travel map") + ". Use arrow keys to pan, plus and minus to zoom, or the selector for a text alternative.");
+        host.setAttribute("aria-label", (settings.states ? "U.S. state travel map" : "World travel map") + ". Use arrow keys to pan, plus and minus to zoom. " + (picker ? "Use the selector for a text alternative." : "Explored places are listed below."));
         const layers = new Map();
         let selectedCode;
         let antarcticaInset;
@@ -307,7 +308,7 @@
         };
 
         function reset() {
-          picker.value = "";
+          if (picker) picker.value = "";
           selectedCode = undefined;
           status.textContent = idleStatus;
           map.setMinZoom(-5);
@@ -317,19 +318,23 @@
           antarcticaInset?.close();
         }
         reset();
-        const resetButton = section.querySelector("[data-reset-map]");
-        resetButton.hidden = false;
-        resetButton.addEventListener("click", reset);
+        const resetButton = controls.querySelector("[data-reset-map]");
+        if (resetButton) {
+          resetButton.hidden = false;
+          resetButton.addEventListener("click", reset);
+        }
         let moving = false;
-        moveButton.hidden = false;
-        moveButton.addEventListener("click", () => {
-          moving = !moving;
-          moveButton.setAttribute("aria-pressed", String(moving));
-          moveButton.textContent = moving ? "Done moving map" : "Move map";
-          host.classList.toggle("is-moving", moving);
-          if (moving) { map.dragging.enable(); map.touchZoom.enable(); }
-          else { map.dragging.disable(); map.touchZoom.disable(); }
-        });
+        if (moveButton) {
+          moveButton.hidden = false;
+          moveButton.addEventListener("click", () => {
+            moving = !moving;
+            moveButton.setAttribute("aria-pressed", String(moving));
+            moveButton.textContent = moving ? "Done moving map" : "Move map";
+            host.classList.toggle("is-moving", moving);
+            if (moving) { map.dragging.enable(); map.touchZoom.enable(); }
+            else { map.dragging.disable(); map.touchZoom.disable(); }
+          });
+        }
         section.addEventListener("keydown", (event) => {
           if (event.key === "Escape") {
             countries.eachLayer((layer) => layer.closeTooltip());
@@ -337,23 +342,25 @@
             if (moving) moveButton.click();
           }
         });
-        countryCodes.sort((a, b) => placeName(a).localeCompare(placeName(b))).forEach((code) => picker.add(new Option(placeName(code), code)));
-        picker.disabled = false;
-        picker.addEventListener("change", () => {
-          countries.eachLayer((layer) => layer.closeTooltip());
-          antarcticaInset?.close();
-          if (!picker.value) { reset(); status.textContent = idleStatus; return; }
-          const code = picker.value;
-          selectedCode = code;
-          status.textContent = description(code, placeName(code));
-          if (!settings.states && code === "US" && statesSection) { openStates(picker); return; }
-          if (!settings.states && code === "AQ") { antarcticaInset.open(true); return; }
-          const layer = layers.get(code);
-          if (layer) {
-            map.fitBounds(layer.getBounds(), { padding: [35, 35], maxZoom: settings.states ? 2 : 6, animate: false });
-            layer.openTooltip(layer.getBounds().getCenter());
-          }
-        });
+        if (picker) {
+          countryCodes.sort((a, b) => placeName(a).localeCompare(placeName(b))).forEach((code) => picker.add(new Option(placeName(code), code)));
+          picker.disabled = false;
+          picker.addEventListener("change", () => {
+            countries.eachLayer((layer) => layer.closeTooltip());
+            antarcticaInset?.close();
+            if (!picker.value) { reset(); status.textContent = idleStatus; return; }
+            const code = picker.value;
+            selectedCode = code;
+            status.textContent = description(code, placeName(code));
+            if (!settings.states && code === "US" && statesSection) { openStates(picker); return; }
+            if (!settings.states && code === "AQ") { antarcticaInset.open(true); return; }
+            const layer = layers.get(code);
+            if (layer) {
+              map.fitBounds(layer.getBounds(), { padding: [35, 35], maxZoom: settings.states ? 2 : 6, animate: false });
+              layer.openTooltip(layer.getBounds().getCenter());
+            }
+          });
+        }
         new ResizeObserver(() => {
           if (!host.clientWidth || !host.clientHeight) return;
           map.invalidateSize({ pan: false });

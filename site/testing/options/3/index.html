@@ -46,17 +46,10 @@
           <li data-upcoming-legend><span class="world-swatch upcoming" aria-hidden="true"></span>Upcoming</li>
           <li data-upcoming-legend><span class="world-swatch visited-upcoming" aria-hidden="true"></span>Visited &amp; Upcoming</li>
         </ul>
-        <p class="world-help" id="world-help">Hover or tap a country for details. Click or tap the United States to explore all 50 states. Use + and − to zoom, or reset for the full world. Turn on “Move map” to drag or pinch-zoom; turn it off to scroll the page.</p>
-        <div class="world-tools">
-          <label for="world-country">Find a country</label>
-          <select id="world-country" data-map-picker disabled><option value="">Full world view</option></select>
-          <button type="button" data-reset-map hidden>Reset world view</button>
-          <button type="button" data-move-map aria-pressed="false" hidden>Move map</button>
-        </div>
-        <p class="world-status" data-map-status role="status">Hover or tap a country to explore.</p>
+        <p class="world-help" id="world-help">Hover or tap a country for details. Click or tap the United States to explore all 50 states. Use + and − to zoom.</p>
+        <p class="world-status visually-hidden" data-map-status role="status">Hover or tap a country to explore.</p>
         <details class="world-country-list"><summary>Destinations I’ve explored — text list</summary><div data-visited-list>Loading explored destinations…</div></details>
         <noscript><p>The interactive map and country list need JavaScript.</p></noscript>
-        <p class="world-credit">Map: <a href="https://leafletjs.com/" target="_blank" rel="noreferrer">Leaflet</a> · Country boundaries: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a> via <a href="https://github.com/topojson/world-atlas" target="_blank" rel="noreferrer">World Atlas</a></p>
         </div>
         <section class="states-breakout" id="united-states" aria-labelledby="states-title" hidden>
           <button type="button" class="world-back-button" data-back-world>← Back to world map</button>
@@ -70,17 +63,10 @@
             <p class="world-loading" data-map-loading>Loading the states…</p>
           </div>
           <ul class="world-legend" aria-label="U.S. state map legend"><li><span class="world-swatch visited" aria-hidden="true"></span>Visited — all 50 states</li></ul>
-          <p class="world-help" id="states-help">Hover or tap a state for details. Use + and − to zoom, or reset for all 50 states. Turn on “Move map” to drag or pinch-zoom; turn it off to scroll the page.</p>
-          <div class="world-tools">
-            <label for="state-picker">Find a state</label>
-            <select id="state-picker" data-map-picker disabled><option value="">All 50 states</option></select>
-            <button type="button" data-reset-map hidden>Reset U.S. view</button>
-            <button type="button" data-move-map aria-pressed="false" hidden>Move map</button>
-          </div>
-          <p class="world-status" data-map-status role="status">Hover or tap a state to explore.</p>
+          <p class="world-help" id="states-help">Hover or tap a state for details. Use + and − to zoom.</p>
+          <p class="world-status visually-hidden" data-map-status role="status">Hover or tap a state to explore.</p>
           <details class="world-country-list"><summary>States I’ve explored — text list</summary><div data-visited-list>All 50 U.S. states visited.</div></details>
           <noscript><p>I’ve visited all 50 U.S. states. The interactive state map needs JavaScript.</p></noscript>
-          <p class="world-credit">State boundaries: <a href="https://github.com/topojson/us-atlas" target="_blank" rel="noreferrer">U.S. Atlas / U.S. Census Bureau</a>. Washington, D.C. and U.S. territories are excluded from the 50-state count.</p>
         </section>
       </section>
       <section class="map-community world-section" id="create-map" aria-labelledby="create-map-title">
