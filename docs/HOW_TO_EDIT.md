@@ -12,6 +12,11 @@ You do not need to understand the code. Your AI helper has instructions built in
 
 Publishing means the assistant checks the site, saves a Git commit, and pushes it to GitHub. GitHub then securely copies the public site files to DreamHost automatically.
 
+After the introduction, the homepage and all four testing designs show
+**Countries Visited**, **Create your own map**, **Rustin's friends' maps**,
+**Currently into**, and **Around the web**, in that order. The introduction's
+buttons are **Find me online**, **Travel map**, and **See what I'm into**.
+
 ## Safe prompts you can copy
 
 ### Change words or links

@@ -25,7 +25,7 @@ Setting up a new Windows laptop? Start with [docs/LAPTOP_SETUP.md](docs/LAPTOP_S
 - `site/assets/content.js` — Rustin's words, hobbies, and social links
 - `site/assets/travel-countries.js` — visited country codes and upcoming map highlights
 - `site/assets/travel-states.js` — the separate list of all 50 visited U.S. states
-- `site/assets/travel-map.js` and `travel-map.css` — the interactive Around the world map
+- `site/assets/travel-map.js` and `travel-map.css` — the interactive Countries Visited map
 - `site/maps/index.html` — create, view, and update a friend's travel map
 - `site/assets/friends-map.js` and `friends-directory.js` — the map editor and friends list
 - `site/api/maps.php` — saves friends' maps outside the public website folder
