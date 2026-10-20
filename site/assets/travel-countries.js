@@ -4,7 +4,7 @@
 window.RUSTIN_TRAVEL = {
   visited: [
     "AE", "AF", "AT", "BE", "BS", "CA", "CN", "CO", "DE", "EE", "EG", "ES", "FI", "FJ",
-    "FR", "GB", "GR", "HK", "ID", "IN", "IT", "JM", "KG", "MA", "MO", "MX", "NL", "NO",
+    "FR", "GB", "GR", "HK", "ID", "IN", "IT", "JM", "JP", "KG", "MA", "MO", "MX", "NL", "NO", "NZ",
     "PA", "PE", "PH", "PL", "PR", "PT", "RU", "SA", "SE", "SG", "TW", "US", "VN"
   ],
   countryNotes: { GB: "England & Scotland" },

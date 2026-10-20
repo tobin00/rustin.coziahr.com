@@ -39,7 +39,7 @@ Publishing means the assistant checks the site, saves a Git commit, and pushes i
 Open `site/assets/travel-countries.js`. This is the only file you need to
 change for the map's visited list, count, and upcoming highlights.
 
-- `visited` currently records your 41 confirmed destinations. The count says
+- `visited` currently records your 43 confirmed destinations. The count says
   **Destinations Explored** because it includes countries and separately tracked
   territories. Hong Kong (`HK`), Macau (`MO`), Taiwan (`TW`), and Puerto Rico (`PR`)
   each have their own region. `GB` covers the United Kingdom; the map note names
@@ -95,7 +95,7 @@ The homepage's **Create your own map** link opens `/maps/`. Friends enter a
 display name, choose the countries and territories they have visited, and select
 any of the 50 U.S. states. **Save map online** keeps the map on the website so
 they can return later. Selecting a state also marks the United States visited.
-This never changes your own 41-destination list in `travel-countries.js` or
+This never changes your own 43-destination list in `travel-countries.js` or
 your all-50-state list in `travel-states.js`.
 
 - **Public map link:** share this so people can view the map. The display name
