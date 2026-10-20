@@ -134,12 +134,14 @@
         const map = L.map(host, {
           crs: settings.states ? L.CRS.Simple : L.CRS.EPSG4326,
           zoomSnap: 0, zoomDelta: 0.75, minZoom: -5, maxZoom: settings.states ? 4 : 8,
-          scrollWheelZoom: false, doubleClickZoom: false, touchZoom: false, boxZoom: false,
+          scrollWheelZoom: true, wheelPxPerZoomLevel: 90,
+          doubleClickZoom: false, touchZoom: false, boxZoom: false,
           dragging: false, keyboard: true, zoomAnimation: !reducedMotion,
           fadeAnimation: !reducedMotion, inertia: false, attributionControl: false,
           maxBounds: settings.states ? homeBounds.pad(0.15) : [[-105, -200], [105, 200]], maxBoundsViscosity: 1
         });
-        host.setAttribute("aria-label", (settings.states ? "U.S. state travel map" : "World travel map") + ". Use arrow keys to pan, plus and minus to zoom. " + (picker ? "Use the selector for a text alternative." : "Explored places are listed below."));
+        map.zoomControl.setPosition("bottomleft");
+        host.setAttribute("aria-label", (settings.states ? "U.S. state travel map" : "World travel map") + ". Use the mouse wheel or the bottom-left plus and minus buttons to zoom; arrow keys pan. " + (picker ? "Use the selector for a text alternative." : "Explored places are listed below."));
         const layers = new Map();
         let selectedCode;
         let antarcticaInset;

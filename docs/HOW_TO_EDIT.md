@@ -79,11 +79,14 @@ change for the map's visited list, count, and upcoming highlights.
 Refresh the local preview to see your changes, run `npm run check`, and ask
 to publish when ready. The published site changes only after publishing.
 The homepage and all four personal testing designs keep hover/tap details,
-the + and − zoom buttons, the U.S. state breakdown and its back button, the
-legend, and the expandable explored-place lists. The text lists provide a
+the + and − zoom buttons at the bottom left, the U.S. state breakdown and its
+back button, the legend, and the expandable explored-place lists. The text lists provide a
 keyboard and screen-reader alternative. These personal views use a simpler
 layout without country/state selectors, reset or “Move map” controls, or a
-visible source-credit footer. Normal swipes scroll the page.
+visible source-credit footer. On a computer, the mouse wheel zooms when the
+pointer is over the main world or U.S. state map. Move the pointer outside the
+map to scroll the page. Phone swipes still scroll the page normally; the small
+Antarctica inset does not use mouse-wheel zoom.
 
 The map uses local Leaflet files and prepared Natural Earth boundaries. The main
 world view keeps its original roomy, equirectangular proportions. Antarctica
@@ -125,8 +128,11 @@ The `/maps/` creator and shared-map views keep their country/state selectors,
 reset buttons, “Move map” controls, and visible source credits. Their selectors
 and expandable text lists offer keyboard and screen-reader alternatives.
 Normal swipes scroll the page; “Move map” enables dragging and pinch zoom,
-and “Done moving map” restores page scrolling. Zoom buttons and selectors work
-in either mode. Selecting the United States also opens the state breakdown.
+and “Done moving map” turns those off. The mouse wheel zooms over the main world
+or U.S. state map in either mode, and the + and − buttons remain at the bottom
+left. Move the pointer outside the map to scroll the page. Phone swipes scroll
+normally while “Move map” is off. Selectors also work in either mode; selecting
+the United States opens the state breakdown.
 
 - **Public map link:** share this so people can view the map. The display name
   and selected places are visible to anyone with the link.

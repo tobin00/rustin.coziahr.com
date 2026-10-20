@@ -18,7 +18,7 @@
 .world-section .travel-map .leaflet-control-zoom a:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }
 .world-section .travel-map .leaflet-control { border-color: var(--world-border); box-shadow: none; }
 .world-section .travel-map .world-tooltip, .world-section .antarctica-map .world-tooltip { border: 0; border-radius: .3rem; box-shadow: 0 3px 15px #0004; padding: 0; }
-.antarctica-inset { position: absolute; left: .75rem; bottom: .75rem; z-index: 1; width: 140px; padding: .45rem; border: 1px solid var(--world-border); border-radius: .4rem; background: var(--world-ocean); }
+.antarctica-inset { position: absolute; left: 4.5rem; bottom: .75rem; z-index: 1; width: clamp(110px, 13vw, 140px); padding: .45rem; border: 1px solid var(--world-border); border-radius: .4rem; background: var(--world-ocean); }
 .antarctica-map { height: 80px; touch-action: pan-y pinch-zoom; cursor: pointer; }
 .antarctica-map.leaflet-container { background: transparent; overflow: visible; }
 .antarctica-map:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: 2px; }
