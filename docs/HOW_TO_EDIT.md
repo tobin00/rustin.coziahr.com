@@ -57,6 +57,9 @@ change for the map's visited list, count, and upcoming highlights.
 - New upcoming destinations have a solid orange fill. Destinations in both
   `visited` and `upcoming` keep their visited fill with an orange outline,
   shown in the legend as **Visited & Upcoming**.
+- The United States is the exception: it keeps its visited fill and a neutral
+  border, even with another trip planned. Its tooltip still shows **Upcoming**,
+  and clicking it still opens the state breakdown.
 - Set `showUpcoming: false` to hide upcoming highlights and both upcoming legend items.
 - Upcoming destinations never add to the visited count. No dates appear
   on the map. Your homepage map remains read-only; friends edit their own maps
@@ -69,10 +72,17 @@ reader alternative. Normal swipes scroll the page; “Move map” explicitly
 enables dragging and pinch zoom. “Done moving map” restores
 normal scrolling. Zoom buttons and the country selector work in either mode.
 
-The map uses local Leaflet files and prepared Natural Earth boundaries, with
-no paid service, API key, map tiles, or visitor CDN calls. The map assets load
-only as a visitor approaches the section. Provenance and licenses are in
-`site/assets/vendor/leaflet/`. Keep those files intact.
+The map uses local Leaflet files and prepared Natural Earth boundaries. The main
+world view keeps its original roomy, equirectangular proportions. Antarctica
+appears in a separate small polar inset, so it does not change the main map's
+scale. It remains selectable with a tooltip, and `AQ` follows the usual
+country-list and visited-count rules. An upcoming Antarctica trip adds no visit
+until `AQ` is added to `visited`.
+The source boundaries are simplified for display, and the polar inset is prepared
+in advance. Visitors need no extra projection library. There is no paid service,
+API key, map tiles, or visitor CDN calls.
+The map assets load only as a visitor approaches the section. Provenance and
+licenses are in `site/assets/vendor/leaflet/`. Keep those files intact.
 
 The separate **Across the United States** breakout uses
 `site/assets/travel-states.js`. All 50 state postal codes are listed as visited,

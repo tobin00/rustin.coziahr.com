@@ -17,7 +17,14 @@
 .world-section .travel-map .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; color: #263546; background: #f7f3e8; }
 .world-section .travel-map .leaflet-control-zoom a:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }
 .world-section .travel-map .leaflet-control { border-color: var(--world-border); box-shadow: none; }
-.world-section .travel-map .world-tooltip { border: 0; border-radius: .3rem; box-shadow: 0 3px 15px #0004; padding: 0; }
+.world-section .travel-map .world-tooltip, .world-section .antarctica-map .world-tooltip { border: 0; border-radius: .3rem; box-shadow: 0 3px 15px #0004; padding: 0; }
+.antarctica-inset { position: absolute; left: .75rem; bottom: .75rem; z-index: 1; width: 140px; padding: .45rem; border: 1px solid var(--world-border); border-radius: .4rem; background: var(--world-ocean); }
+.antarctica-map { height: 80px; touch-action: pan-y pinch-zoom; cursor: pointer; }
+.antarctica-map.leaflet-container { background: transparent; overflow: visible; }
+.antarctica-map:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: 2px; }
+.antarctica-caption { text-align: center; }
+.antarctica-caption h3 { margin: .2rem 0; font-size: .85rem; letter-spacing: 0; }
+.antarctica-caption p { margin: 0; font-size: .7rem; line-height: 1.4; }
 .world-tooltip-content { display: grid; gap: .35rem; padding: .8rem 1rem; max-width: min(280px, 80vw); color: #07111f; font: .9rem/1.4 "DM Sans", sans-serif; text-align: center; }
 .world-tooltip-content strong { font-size: 1rem; }
 .world-legend { display: flex; flex-wrap: wrap; gap: 1.3rem; list-style: none; padding: 0; margin: 1.25rem 0; font-size: .85rem; }
@@ -45,8 +52,13 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
   .world-stat strong { display: inline; font-size: 2rem; margin-right: .5rem; }
   .world-section .travel-map { height: 320px; min-height: 290px; }
   .world-section .travel-map.leaflet-container { height: 320px; }
+  /* Reserve the inset row before the map's lazy-loaded assets arrive. */
+  [data-world-overview] > .world-frame { min-height: calc(320px + 72px + 1.55rem + 4px); }
   .world-tools label { flex-basis: 100%; }
   .world-tools select { flex: 1 0 100%; width: 100%; min-width: 0; }
+  .antarctica-inset { position: static; width: auto; display: grid; grid-template-columns: 80px 1fr; align-items: center; gap: .75rem; margin: 0 .75rem .75rem; padding: .4rem .75rem; }
+  .antarctica-map { height: 72px; }
+  .antarctica-caption { text-align: left; }
 }
 @media (prefers-reduced-motion: reduce) {
   .world-section .travel-map .leaflet-interactive { transition: none; }

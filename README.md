@@ -67,7 +67,11 @@ link lets its owner return and update it. Appearing in Rustin's friends list is
 optional. Keep the private link safe: there are no accounts or recovery service.
 Rustin's own 43 destinations remain managed in `site/assets/travel-countries.js`.
 New upcoming destinations have a solid orange fill; return visits keep their
-visited fill with an orange outline. Upcoming trips never add to the explored count.
+visited fill with an orange outline. The United States keeps a neutral border;
+its upcoming status remains in the tooltip. Upcoming trips never add to the
+explored count. The main world map keeps its original roomy proportions, with
+Antarctica in a separate small polar inset. Antarctica remains selectable, with
+a tooltip and the usual country-list and visited-count rules.
 
 The service needs PHP 8+, PDO SQLite, and a writable private home directory.
 On the current DreamHost setup, friends' maps are stored in

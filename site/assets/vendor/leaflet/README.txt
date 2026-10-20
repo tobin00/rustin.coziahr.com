@@ -24,6 +24,50 @@ Longitude seams were normalized with D3 7.9.0 and d3-geo-projection 4.0.0
 antimeridian-crossing polygons, avoiding lines across Russia and Fiji.
 These D3 packages are also preparation tools only, not visitor dependencies.
 
+Antarctica inset asset: antarctica-polar.json
+The main world map keeps its familiar equirectangular country shapes.
+Antarctica is also available as a compact South Pole inset, prepared from the
+same World Atlas 2.0.2 / Natural Earth 1:10m source boundary. The inset uses
+D3's standard azimuthal equal-area projection, rotated to the South Pole;
+it is not a hand-drawn or invented boundary.
+Projection reference: https://d3js.org/d3-geo/azimuthal#geoAzimuthalEqualArea
+
+The file is planar GeoJSON, not longitude/latitude GeoJSON. Metadata:
+  projection: "South Pole"
+  viewport: [200, 200]
+Coordinates increase rightward and downward. Leaflet CRS.Simple displays them
+with coordsToLatLng([x, y]) = L.latLng(-y, x). Fit the full viewport, not geographic
+latitude bounds. Do not run these projected coordinates through another
+geographic projection. countries.geo.json remains the geographic reference and
+main-map source, including its original AQ feature and all country codes.
+
+Preparation uses tools/prepare-world-map.mjs with these pinned, separate tools:
+  D3 7.9.0: https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js
+  d3-geo-projection 4.0.0:
+    https://cdn.jsdelivr.net/npm/d3-geo-projection@4.0.0/dist/d3-geo-projection.min.js
+  mapshaper 0.6.113 (installed in a separate preparation folder)
+The D3 bundles and mapshaper are not distributed or loaded by the website.
+Existing Natural Earth / World Atlas provenance and licenses cover the data.
+
+Give the script an UNSIMPLIFIED spherical FeatureCollection converted from the
+pinned countries-10m.json with topojson-client 3.1.0. For each source feature,
+retain only properties {code, name}: map the zero-padded numeric feature id to
+the ISO alpha-2 field of the pinned i18n-iso-countries 7.14.0 codes.json, or null
+if there is no standard code; retain the original source name and geometry.
+Do not use countries.geo.json as this source: its prior equirectangular seam
+and polar patches cannot safely be streamed through a second projection.
+Example (all preparation files are outside the project):
+  node tools/prepare-world-map.mjs --source C:/prep/source.geo.json --d3 C:/prep/d3-7.9.0.js --projection C:/prep/d3-geo-projection-4.0.0.js --mapshaper C:/prep/node_modules/mapshaper/bin/mapshaper
+
+The preparation script extracts only AQ, normalizes spherical ring direction,
+and applies geoProject with geoAzimuthalEqualArea().rotate([0, 90]), fitted to
+the inset viewport with padding. It simplifies the projected topology at 5%
+with planar keep-shapes and 0.01-unit precision. The small inset contains one
+AQ feature and is about 18 KB; all main-map geography remains unchanged.
+The script checks the region code, finite viewport bounds, and positive area
+without a globe-covering polygon. Re-run npm run check after regeneration and
+inspect the Antarctic tooltip/selection at phone and desktop widths.
+
 ISO country-code catalog: i18n-iso-countries 7.14.0 (MIT)
 Source: https://cdn.jsdelivr.net/npm/i18n-iso-countries@7.14.0/codes.json
 License: LICENSE-iso-countries

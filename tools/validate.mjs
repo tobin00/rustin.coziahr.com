@@ -10,6 +10,7 @@ const required = [
   "site/assets/travel-states.js", "site/assets/vendor/leaflet/us-states-albers.json",
   "site/assets/vendor/leaflet/leaflet-1.9.4.js", "site/assets/vendor/leaflet/leaflet-1.9.4.css",
   "site/assets/vendor/leaflet/countries.geo.json", "site/assets/vendor/leaflet/iso-codes.json",
+  "site/assets/vendor/leaflet/antarctica-polar.json",
   "site/maps/index.html", "site/api/maps.php", "site/assets/friends-config.js",
   "site/assets/friends-map.js", "site/assets/friends-map.css", "site/assets/friends-directory.js",
   ...[1, 2, 3, 4].map((number) => `site/testing/options/${number}/index.html`)
@@ -57,11 +58,21 @@ try {
   runInNewContext(await readFile(path.join(repo, "site/assets/friends-config.js"), "utf8"), friendConfig);
   if (friendConfig.window.RUSTIN_TRAVEL.visited.length || friendConfig.window.RUSTIN_STATES.visited.length) errors.push("Friends must start with empty personal maps, not Rustin’s history.");
   const geography = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/countries.geo.json"), "utf8"));
+  const polar = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/antarctica-polar.json"), "utf8"));
+  if (polar.projection !== "South Pole" || !Array.isArray(polar.viewport) || polar.viewport.length !== 2 || polar.viewport.some((value) => !Number.isFinite(value) || value <= 0)) errors.push("Antarctica needs a valid prepared polar viewport.");
+  if (polar.features.length !== 1 || polar.features[0].properties.code !== "AQ" || !polar.features[0].geometry) errors.push("The polar inset must contain Antarctica only.");
   for (const code of travel.visited) {
     if (!geography.features.some((feature) => feature.properties.code === code && feature.geometry)) errors.push(`Visited destination ${code} has no world-map region.`);
   }
   for (const code of ["US", "JP", "CL", "AQ", "TV", "VA", "SG"]) {
     if (!geography.features.some((feature) => feature.properties.code === code && feature.geometry)) errors.push(`World map is missing ${code}.`);
+  }
+  function projectedPoints(coordinates) {
+    return typeof coordinates[0] === "number" ? [coordinates] : coordinates.flatMap(projectedPoints);
+  }
+  if (polar.features[0]?.geometry) {
+    const points = projectedPoints(polar.features[0].geometry.coordinates);
+    if (points.some((point) => point.some((value, axis) => !Number.isFinite(value) || value < 0 || value > polar.viewport[axis]))) errors.push("Antarctica's prepared shape must stay inside its inset.");
   }
   for (const page of ["site/index.html", ...[1, 2, 3, 4].map((number) => `site/testing/options/${number}/index.html`)]) {
     const html = await readFile(path.join(repo, page), "utf8");

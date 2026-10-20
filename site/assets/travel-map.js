@@ -89,7 +89,7 @@
 
     async function initialize() {
       try {
-        const [, geography, catalog] = await Promise.all([
+        const [, geography, catalog, antarctica] = await Promise.all([
           library ||= Promise.all([
             loadAsset("link", "vendor/leaflet/leaflet-1.9.4.css"),
             loadAsset("script", "vendor/leaflet/leaflet-1.9.4.js")
@@ -100,6 +100,10 @@
           }),
           settings.states ? Promise.resolve(null) : fetch(new URL("vendor/leaflet/iso-codes.json", assets)).then((response) => {
             if (!response.ok) throw new Error("Country names could not load");
+            return response.json();
+          }),
+          settings.states ? Promise.resolve(null) : fetch(new URL("vendor/leaflet/antarctica-polar.json", assets)).then((response) => {
+            if (!response.ok) throw new Error("Antarctica could not load");
             return response.json();
           })
         ]);
@@ -122,10 +126,10 @@
         refreshSummary();
         const description = (code, name) => name + " — " + (visited.has(code) ? "Visited" : "Not yet visited") + (upcoming.has(code) ? " · Upcoming" : "");
         const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const homeBounds = L.latLngBounds(settings.states ? [[-610, 0], [0, 975]] : [[-90, -180], [90, 180]]);
+        const homeBounds = L.latLngBounds(settings.states ? [[-610, 0], [0, 975]] : [[-60, -180], [85, 180]]);
         const idleStatus = "Hover or tap a " + (settings.states ? "state" : "country") + " to explore.";
-        // Leaflet handles rendering, tooltips, zooming and panning. The U.S.
-        // dataset is already projected by U.S. Atlas, with Alaska/Hawaii insets.
+        // Keep the familiar world proportions. Antarctica is shown separately
+        // in a compact polar inset, leaving the main view focused on travel.
         const map = L.map(host, {
           crs: settings.states ? L.CRS.Simple : L.CRS.EPSG4326,
           zoomSnap: 0, zoomDelta: 0.75, minZoom: -5, maxZoom: settings.states ? 4 : 8,
@@ -137,11 +141,13 @@
         host.setAttribute("aria-label", (settings.states ? "U.S. state travel map" : "World travel map") + ". Use arrow keys to pan, plus and minus to zoom, or the selector for a text alternative.");
         const layers = new Map();
         let selectedCode;
+        let antarcticaInset;
         const baseStyle = (feature) => {
           const code = feature.properties.code;
           const wasVisited = visited.has(code);
           const isUpcoming = upcoming.has(code);
-          const returning = wasVisited && isUpcoming;
+          // U.S. visits keep the normal border, including on upcoming returns.
+          const returning = wasVisited && isUpcoming && code !== "US";
           return {
             fillColor: color(wasVisited ? "--world-visited" : isUpcoming ? "--world-upcoming" : "--world-unvisited"),
             fillOpacity: 1,
@@ -182,6 +188,7 @@
         }
         const countries = L.geoJSON(geography, {
           style: baseStyle,
+          filter: settings.states ? undefined : (feature) => feature.properties.code !== "AQ",
           coordsToLatLng: settings.states ? (coords) => L.latLng(-coords[1], coords[0]) : undefined,
           onEachFeature(feature, layer) {
             const code = feature.properties.code;
@@ -192,6 +199,7 @@
               mouseover() { layer.setStyle({ fillOpacity: 0.8, weight: 1.8 }); },
               mouseout() { layer.setStyle(baseStyle(feature)); },
               click(event) {
+                antarcticaInset?.close();
                 if (!settings.states && code === "US" && statesSection) {
                   layer.closeTooltip();
                   openStates(layer.getElement());
@@ -224,8 +232,77 @@
           }
         }).addTo(map);
 
+        if (!settings.states) {
+          const inset = document.createElement("aside");
+          inset.className = "antarctica-inset";
+          inset.setAttribute("aria-label", "Antarctica inset");
+          const insetHost = document.createElement("div");
+          insetHost.className = "antarctica-map";
+          insetHost.id = "antarctica-map";
+          insetHost.setAttribute("role", "button");
+          insetHost.setAttribute("tabindex", "0");
+          const caption = document.createElement("div");
+          caption.className = "antarctica-caption";
+          const title = document.createElement("h3");
+          title.textContent = "Antarctica";
+          const detail = document.createElement("p");
+          caption.append(title, detail);
+          inset.append(insetHost, caption);
+          section.querySelector(".world-frame").append(inset);
+          const insetBounds = L.latLngBounds([[-antarctica.viewport[1], 0], [0, antarctica.viewport[0]]]);
+          const insetMap = L.map(insetHost, {
+            crs: L.CRS.Simple, zoomControl: false, attributionControl: false,
+            dragging: false, scrollWheelZoom: false, doubleClickZoom: false,
+            touchZoom: false, keyboard: false, boxZoom: false, zoomSnap: 0,
+            minZoom: -5, maxZoom: 4
+          });
+          let insetLayer;
+          L.geoJSON(antarctica, {
+            coordsToLatLng: (coords) => L.latLng(-coords[1], coords[0]),
+            style: baseStyle,
+            onEachFeature(feature, layer) {
+              insetLayer = layer;
+              layer.bindTooltip(tooltipContent("AQ", "Antarctica"), { direction: "right", className: "world-tooltip", opacity: 1 });
+              layer.on({
+                mouseover() { layer.setStyle({ fillOpacity: .8 }); },
+                mouseout() { layer.setStyle(baseStyle(feature)); }
+              });
+            }
+          }).addTo(insetMap);
+          function fitInset() { insetMap.fitBounds(insetBounds, { padding: [3, 3], animate: false }); }
+          function openInset(focus = false) {
+            selectedCode = "AQ";
+            status.textContent = description("AQ", "Antarctica");
+            fitInset();
+            insetLayer.openTooltip(insetLayer.getBounds().getCenter());
+            if (focus) insetHost.focus({ preventScroll: true });
+          }
+          insetHost.addEventListener("click", () => openInset());
+          insetHost.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openInset(); }
+          });
+          antarcticaInset = {
+            open: openInset,
+            close() { insetLayer.closeTooltip(); },
+            refresh() {
+              refreshLayer(insetLayer.feature, insetLayer);
+              const label = description("AQ", "Antarctica");
+              insetHost.setAttribute("aria-label", label + ". Show details");
+              detail.textContent = label.replace("Antarctica — ", "");
+            }
+          };
+          fitInset();
+          antarcticaInset.refresh();
+          new ResizeObserver(() => {
+            if (!insetHost.clientWidth || !insetHost.clientHeight) return;
+            insetMap.invalidateSize({ pan: false });
+            fitInset();
+          }).observe(insetHost);
+        }
+
         refreshMap = () => {
           countries.eachLayer((layer) => refreshLayer(layer.feature, layer));
+          antarcticaInset?.refresh();
           if (selectedCode) status.textContent = description(selectedCode, placeName(selectedCode));
         };
 
@@ -237,6 +314,7 @@
           map.fitBounds(homeBounds, { padding: [12, 12], animate: false });
           map.setMinZoom(map.getZoom());
           countries.eachLayer((layer) => layer.closeTooltip());
+          antarcticaInset?.close();
         }
         reset();
         const resetButton = section.querySelector("[data-reset-map]");
@@ -255,6 +333,7 @@
         section.addEventListener("keydown", (event) => {
           if (event.key === "Escape") {
             countries.eachLayer((layer) => layer.closeTooltip());
+            antarcticaInset?.close();
             if (moving) moveButton.click();
           }
         });
@@ -262,11 +341,13 @@
         picker.disabled = false;
         picker.addEventListener("change", () => {
           countries.eachLayer((layer) => layer.closeTooltip());
+          antarcticaInset?.close();
           if (!picker.value) { reset(); status.textContent = idleStatus; return; }
           const code = picker.value;
           selectedCode = code;
           status.textContent = description(code, placeName(code));
           if (!settings.states && code === "US" && statesSection) { openStates(picker); return; }
+          if (!settings.states && code === "AQ") { antarcticaInset.open(true); return; }
           const layer = layers.get(code);
           if (layer) {
             map.fitBounds(layer.getBounds(), { padding: [35, 35], maxZoom: settings.states ? 2 : 6, animate: false });
