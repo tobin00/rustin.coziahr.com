@@ -32,8 +32,13 @@
           <div><p class="eyebrow">Your places, your story</p><h2 id="world-title">Your destinations</h2></div>
           <p class="world-stat"><strong data-map-count>0</strong> <span data-map-count-label>Destinations Explored</span></p>
         </div>
+        <div class="world-view-switch" role="group" aria-label="World map view">
+          <button type="button" data-world-view="flat" aria-pressed="true" aria-controls="travel-map">Flat map</button>
+          <button type="button" data-world-view="globe" aria-pressed="false" aria-controls="travel-globe" disabled>Globe</button>
+        </div>
         <div class="world-frame">
           <div id="travel-map" class="travel-map" aria-describedby="world-help"></div>
+          <div id="travel-globe" class="travel-globe" aria-describedby="world-help" hidden></div>
           <p class="world-loading" data-map-loading>Loading the world…</p>
         </div>
         <ul class="world-legend" aria-label="Map legend">
@@ -84,6 +89,7 @@
     <footer><a href="/#friends-maps">← Back to Rustin’s friends’ maps</a></footer>
   </div>
   <script src="../assets/friends-config.js"></script>
+  <script src="../assets/travel-globe.js"></script>
   <script src="../assets/travel-map.js"></script>
   <script src="../assets/friends-map.js"></script>
 </body>

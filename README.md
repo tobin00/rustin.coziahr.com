@@ -28,6 +28,7 @@ Setting up a new Windows laptop? Start with [docs/LAPTOP_SETUP.md](docs/LAPTOP_S
 - `site/assets/travel-states.js` — the separate list of all 50 visited U.S. states
 - `site/assets/travel-uk.js` — the separate list of visited UK countries, with England and Scotland confirmed
 - `site/assets/travel-map.js` and `travel-map.css` — the interactive Countries Visited map
+- `site/assets/travel-globe.js` — optional rotating globe, using the same visits and colors
 - `site/maps/index.html` — create, view, and update a friend's travel map
 - `site/assets/friends-map.js` and `friends-directory.js` — the map editor and friends list
 - `site/api/maps.php` — saves friends' maps outside the public website folder
@@ -77,6 +78,11 @@ a tooltip and the usual country-list and visited-count rules.
 The personal map's **Countries & continents** section separates UN member
 countries from other destinations and groups the visited list by continent.
 These totals update automatically when the visited codes change.
+The **Flat map / Globe** switch changes the world view without changing any
+visits or totals. Globe adds mouse rotation, zoom, and keyboard controls; on
+phones, **Rotate globe** turns on touch movement and **Done rotating** restores
+page scrolling. Friends use their existing **Move map** control for touch.
+The globe's local D3 library and prepared boundaries load only when selected.
 Clicking the United Kingdom opens its own map of England, Scotland, Wales, and
 Northern Ireland. England and Scotland are highlighted separately; the United
 Kingdom still counts once in the world totals. This personal breakdown is managed

@@ -13,8 +13,8 @@
 .world-loading { position: absolute; inset: 0; display: grid; place-content: center; margin: 0; padding: 1rem; text-align: center; }
 .world-section .travel-map.leaflet-container { background: var(--world-ocean); font: inherit; height: clamp(300px, 48vw, 590px); aspect-ratio: auto; z-index: 0; touch-action: pan-y pinch-zoom; }
 .world-section .travel-map.is-moving { touch-action: none; }
-.world-section .travel-map.leaflet-grab,
-.world-section .travel-map.leaflet-grab .leaflet-interactive { cursor: grab; }
+.world-section .travel-map.leaflet-container,
+.world-section .travel-map.leaflet-container .leaflet-interactive { cursor: default; }
 .world-section .travel-map.leaflet-grab:active,
 .world-section .travel-map.leaflet-grab:active .leaflet-interactive,
 .leaflet-dragging .world-section .travel-map.leaflet-grab,
@@ -25,7 +25,8 @@
 .world-section .travel-map .leaflet-control { border-color: var(--world-border); box-shadow: none; }
 .world-section .travel-map .world-tooltip, .world-section .antarctica-map .world-tooltip { border: 0; border-radius: .3rem; box-shadow: 0 3px 15px #0004; padding: 0; }
 .antarctica-inset { position: absolute; left: 4.5rem; bottom: .75rem; z-index: 1; width: clamp(110px, 13vw, 140px); padding: .45rem; border: 1px solid var(--world-border); border-radius: .4rem; background: var(--world-ocean); }
-.antarctica-map { height: 80px; touch-action: pan-y pinch-zoom; cursor: pointer; }
+.antarctica-map { height: 80px; touch-action: pan-y pinch-zoom; cursor: default; }
+.world-section .antarctica-map .leaflet-interactive { cursor: default; }
 .antarctica-map.leaflet-container { background: transparent; overflow: visible; }
 .antarctica-map:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: 2px; }
 .antarctica-caption { text-align: center; }
@@ -123,3 +124,40 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
   .travel-stat-grid dd { margin: 0; white-space: nowrap; }
   .travel-continent-grid, .travel-continent-places { grid-template-columns: 1fr; }
 }
+
+/* GLOBE VIEW — the same visited places in an optional rotating world view. */
+.world-view-switch { display: flex; flex-wrap: wrap; gap: .5rem; margin: -1rem 0 1rem; }
+.world-view-switch button { min-height: 44px; padding: .65rem 1.15rem; border: 1px solid var(--world-border); border-radius: .3rem; background: var(--world-ocean); color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+.world-view-switch button[aria-pressed="true"] { background: var(--world-visited); border-color: var(--world-visited); color: var(--world-ocean); }
+.world-view-switch button:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: 3px; }
+.world-frame .travel-map[hidden], .travel-globe[hidden] { display: none !important; }
+.world-frame.is-globe { min-height: 0; }
+.world-frame.is-globe .antarctica-inset { display: none; }
+.travel-globe { position: relative; width: 100%; height: clamp(360px, 55vw, 590px); min-height: 360px; overflow: hidden; background: var(--world-ocean); touch-action: pan-y pinch-zoom; }
+.travel-globe-svg { display: block; width: 100%; height: 100%; overflow: hidden; cursor: default; touch-action: pan-y pinch-zoom; }
+.travel-globe-svg:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: -5px; }
+.travel-globe.is-globe-dragging .travel-globe-svg, .travel-globe.is-globe-dragging .globe-country { cursor: grabbing; }
+.travel-globe.is-touch-enabled, .travel-globe.is-touch-enabled .travel-globe-svg { touch-action: none; }
+.globe-ocean { stroke-width: 1.5; }
+.globe-graticule { fill: none; stroke-width: .5; opacity: .6; pointer-events: none; }
+.globe-country { cursor: default; vector-effect: non-scaling-stroke; transition: fill-opacity .18s ease, stroke .18s ease; outline: none; }
+.globe-country:hover { fill-opacity: .84; }
+.globe-country:focus-visible { stroke: #fff; stroke-width: 2.2; filter: drop-shadow(0 0 2px #07111f); }
+.globe-tooltip { position: absolute; z-index: 2; max-width: min(280px, calc(100% - 16px)); border-radius: .3rem; background: #fff; box-shadow: 0 3px 15px #0004; pointer-events: none; }
+.globe-tooltip[hidden] { display: none; }
+.globe-zoom-controls { position: absolute; left: 10px; bottom: 10px; display: grid; overflow: hidden; border: 1px solid var(--world-border); border-radius: 4px; }
+.globe-zoom-controls button { width: 44px; height: 44px; padding: 0; border: 0; color: #263546; background: #f7f3e8; font: 700 1.6rem/44px Arial, sans-serif; cursor: pointer; }
+.globe-zoom-controls button + button { border-top: 1px solid #bbc0c4; }
+.globe-zoom-controls button:focus-visible { outline: 3px solid #926000; outline-offset: -4px; }
+.globe-zoom-controls button:disabled { color: #8b9095; cursor: default; }
+.globe-touch-toggle { display: none; position: absolute; right: 10px; bottom: 10px; min-height: 44px; padding: .65rem .85rem; border: 1px solid var(--world-border); border-radius: .3rem; background: var(--world-ocean); color: inherit; font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.globe-touch-toggle[aria-pressed="true"] { background: var(--world-visited); border-color: var(--world-visited); color: var(--world-ocean); }
+.globe-touch-toggle:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: 3px; }
+@media (any-pointer: coarse), (max-width: 760px) { .globe-touch-toggle { display: block; } }
+@media (max-width: 760px) {
+  [data-world-overview] > .world-frame.is-globe { min-height: 0; }
+  .travel-globe { height: 390px; }
+  .world-view-switch { margin-top: -.5rem; }
+}
+.travel-globe.is-reduced-motion .globe-country { transition: none; }
+@media (prefers-reduced-motion: reduce) { .globe-country { transition: none; } }

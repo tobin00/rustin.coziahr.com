@@ -100,6 +100,29 @@ bottom left zoom the map. Move the pointer outside the map to scroll the page.
 Phone swipes still scroll the page normally; the small
 Antarctica inset does not use mouse-wheel zoom.
 
+### Flat map or globe
+
+The **Flat map / Globe** buttons above the world map offer two views of the same
+places. Flat map is the default. Globe shows a round world with subtle latitude
+and longitude lines. Drag with the mouse to rotate it, use the wheel or the
+bottom-left + and − buttons to zoom, or focus the globe and use the arrow keys.
+Home restores the full globe. Hover, tap, or focus a country for its visit details.
+Clicking the U.S. or UK still opens the country breakdown; Back returns to the
+world view you chose. Returning to Flat map keeps its previous position and zoom.
+
+On personal maps, phone swipes normally scroll the page. **Rotate globe** enables
+touch rotation and pinch zoom; **Done rotating** restores page scrolling.
+Friends use the existing **Move map / Done moving map** control instead.
+All views use the same visited lists, upcoming colors, and country totals.
+Adding visits still requires only the relevant travel data file, not the globe code.
+
+The globe uses locally saved D3 mapping and interaction libraries, with no key,
+paid service, or visitor CDN requests. Its extra library and spherical boundaries
+load only after Globe is selected. The globe boundaries are prepared from the
+existing world map with maintained tools; the original flat map is preserved.
+See `site/assets/vendor/d3/README.txt` and the Leaflet vendor README for licenses
+and preparation details. If the globe cannot load, the flat map remains available.
+
 The map uses local Leaflet files and prepared Natural Earth boundaries. The main
 world view keeps its original roomy, equirectangular proportions. Antarctica
 appears in a separate small polar inset, so it does not change the main map's

@@ -2,11 +2,14 @@ import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Script, runInNewContext } from "node:vm";
+import { createHash } from "node:crypto";
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const required = [
   "site/index.html", "site/testing/index.html", "site/assets/content.js", "site/assets/site.js", "site/assets/styles.css",
   "site/assets/travel-map.js", "site/assets/travel-map.css", "site/assets/travel-countries.js",
+  "site/assets/travel-globe.js", "site/assets/vendor/d3/d3-globe.min.js", "site/assets/vendor/d3/LICENSE", "site/assets/vendor/d3/README.txt",
+  "site/assets/vendor/leaflet/countries-globe.geo.json",
   "site/assets/travel-regions.js", "site/assets/travel-stats.js",
   "site/assets/travel-states.js", "site/assets/vendor/leaflet/us-states-albers.json",
   "site/assets/travel-uk.js", "site/assets/vendor/leaflet/uk-countries.geo.json",
@@ -30,7 +33,7 @@ const styles = await readFile(path.join(repo, "site/assets/styles.css"), "utf8")
 for (const number of [1, 2, 3, 4]) if (!styles.includes(`data-design=\"${number}\"`)) errors.push(`Missing CSS for design ${number}`);
 
 try {
-  for (const filename of ["content.js", "site.js", "travel-countries.js", "travel-states.js", "travel-uk.js", "travel-map.js", "travel-regions.js", "travel-stats.js", "friends-map.js", "friends-config.js", "friends-directory.js"]) {
+  for (const filename of ["content.js", "site.js", "travel-countries.js", "travel-states.js", "travel-uk.js", "travel-map.js", "travel-globe.js", "travel-regions.js", "travel-stats.js", "friends-map.js", "friends-config.js", "friends-directory.js"]) {
     new Script(await readFile(path.join(repo, "site/assets", filename), "utf8"), { filename });
   }
   const sandbox = { window: {} };
@@ -85,6 +88,21 @@ try {
   runInNewContext(await readFile(path.join(repo, "site/assets/friends-config.js"), "utf8"), friendConfig);
   if (friendConfig.window.RUSTIN_TRAVEL.visited.length || friendConfig.window.RUSTIN_STATES.visited.length) errors.push("Friends must start with empty personal maps, not Rustin’s history.");
   const geography = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/countries.geo.json"), "utf8"));
+  const globe = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/countries-globe.geo.json"), "utf8"));
+  const globeScope = { setTimeout, clearTimeout, setInterval, clearInterval, performance };
+  runInNewContext(await readFile(path.join(repo, "site/assets/vendor/d3/d3-globe.min.js"), "utf8"), globeScope);
+  const d3 = globeScope.RustinGlobeD3;
+  const globeSourceHash = createHash("sha256").update(await readFile(path.join(repo, "site/assets/vendor/leaflet/countries.geo.json"))).digest("hex");
+  if (globe.sourceSha256 !== globeSourceHash) errors.push("Globe boundaries must be regenerated from the current flat world map.");
+  if (globe.features.length !== geography.features.length || globe.features.some((feature, index) => JSON.stringify(feature.properties) !== JSON.stringify(geography.features[index].properties))) errors.push("Flat and globe views must retain the same destination catalog.");
+  for (const feature of globe.features) {
+    const area = d3.geoArea(feature);
+    if (!Number.isFinite(area) || area >= 2 * Math.PI) errors.push(`Globe region ${feature.properties.code || feature.properties.name} has invalid spherical winding.`);
+    if (!feature.geometry && feature.properties.code !== "VA") errors.push(`Globe region ${feature.properties.code || feature.properties.name} lost its geometry.`);
+  }
+  const globeRegion = (code) => globe.features.find((feature) => feature.properties.code === code);
+  if (d3.geoContains(globeRegion("ZA"), [28.2, -29.6]) || d3.geoContains(globeRegion("IT"), [12.46, 43.94])) errors.push("The globe must preserve the Lesotho and San Marino enclaves.");
+  if (!d3.geoContains(globeRegion("RU"), [37.62, 55.75]) || !d3.geoContains(globeRegion("RU"), [129.7, 62])) errors.push("The globe must include both European and Asian Russia.");
   const polar = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/antarctica-polar.json"), "utf8"));
   if (polar.projection !== "South Pole" || !Array.isArray(polar.viewport) || polar.viewport.length !== 2 || polar.viewport.some((value) => !Number.isFinite(value) || value <= 0)) errors.push("Antarctica needs a valid prepared polar viewport.");
   if (polar.features.length !== 1 || polar.features[0].properties.code !== "AQ" || !polar.features[0].geometry) errors.push("The polar inset must contain Antarctica only.");
@@ -111,19 +129,22 @@ try {
     if (!html.includes('id="create-map"') || !html.includes('id="friends-maps"')) errors.push(`${page}: community map sections are missing.`);
     if (!html.includes("data-travel-breakdown")) errors.push(`${page}: the countries and continents breakdown is missing.`);
     if (!html.includes("data-travel-state-count")) errors.push(`${page}: the U.S. states summary counter is missing.`);
-    for (const asset of ["travel-map.css", "travel-countries.js", "travel-states.js", "travel-uk.js", "travel-map.js", "travel-regions.js", "travel-stats.js"]) {
+    if (!html.includes('data-world-view="flat"') || !html.includes('data-world-view="globe"') || !/<div\b[^>]*id="travel-globe"[^>]*\bhidden>/.test(html)) errors.push(`${page}: the flat/globe choice and default hidden globe are required.`);
+    for (const asset of ["travel-map.css", "travel-countries.js", "travel-states.js", "travel-uk.js", "travel-map.js", "travel-globe.js", "travel-regions.js", "travel-stats.js"]) {
       if (!html.includes(asset)) errors.push(`${page} does not load ${asset}.`);
     }
     if (html.indexOf("travel-regions.js") > html.indexOf("travel-stats.js")) errors.push(`${page}: travel classification must load before the statistics.`);
     if (html.indexOf("travel-states.js") > html.indexOf("travel-stats.js")) errors.push(`${page}: visited states must load before the statistics.`);
     if (html.indexOf("travel-uk.js") > html.indexOf("travel-map.js")) errors.push(`${page}: UK visit data must load before the map.`);
+    if (html.indexOf("travel-globe.js") > html.indexOf("travel-map.js")) errors.push(`${page}: the globe component must load before the map.`);
   }
   const mapPage = await readFile(path.join(repo, "site/maps/index.html"), "utf8");
-  for (const asset of ["friends-config.js", "friends-map.js", "travel-map.js", "friends-map.css"]) {
+  for (const asset of ["friends-config.js", "friends-map.js", "travel-map.js", "travel-globe.js", "friends-map.css"]) {
     if (!mapPage.includes(asset)) errors.push(`Map creator is missing ${asset}.`);
   }
   if (mapPage.includes('src="../assets/travel-countries.js"') || mapPage.includes('src="../assets/travel-states.js"')) errors.push("Map creator must not load Rustin’s visited lists.");
   if (mapPage.includes("travel-uk.js")) errors.push("Map creator must not load Rustin’s personal UK visits.");
+  if (!mapPage.includes('data-world-view="globe"') || !mapPage.includes('id="travel-globe"')) errors.push("Friends' maps must offer the same flat/globe choice.");
 } catch (error) {
   errors.push(`Travel map check: ${error.message}`);
 }

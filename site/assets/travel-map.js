@@ -19,6 +19,7 @@
     const breakout = breakouts.get(code);
     if (!breakout || !overview) return;
     worldOpener = opener || breakout.trigger;
+    if (worldOpener?.hasAttribute("aria-controls")) worldOpener.setAttribute("aria-expanded", "true");
     activeBreakout = breakout;
     overview.hidden = true;
     for (const entry of breakouts.values()) {
@@ -40,6 +41,7 @@
     document.querySelectorAll("[data-open-uk]").forEach((button) => button.setAttribute("aria-expanded", "false"));
     overview.hidden = false;
     worldSection.classList.remove("is-drilled-down");
+    if (worldOpener?.hasAttribute("aria-controls")) worldOpener.setAttribute("aria-expanded", "false");
     (worldOpener || activeBreakout.trigger)?.focus({ preventScroll: true });
     activeBreakout = undefined;
     worldSection.scrollIntoView({ block: "start", behavior: "auto" });
@@ -75,6 +77,11 @@
     const ukList = section.querySelector("[data-uk-country-list]");
     const moveButton = controls.querySelector("[data-move-map]");
     const host = section.querySelector(".travel-map");
+    const globeHost = regional ? null : controls.querySelector("#travel-globe");
+    const viewButtons = regional ? [] : [...controls.querySelectorAll("[data-world-view]")];
+    let globe;
+    let globePromise;
+    let viewMode = "flat";
     const countLabel = section.querySelector("[data-map-count-label]");
     if (countLabel) countLabel.textContent = settings.uk ? "of 4 UK countries explored" : settings.states ? "States Explored" : "Destinations Explored";
     section.querySelectorAll("[data-upcoming-legend]").forEach((item) => { item.hidden = !config.showUpcoming; });
@@ -362,6 +369,7 @@
         refreshMap = () => {
           countries.eachLayer((layer) => refreshLayer(layer.feature, layer));
           antarcticaInset?.refresh();
+          globe?.refresh();
           if (selectedCode) status.textContent = description(selectedCode, placeName(selectedCode));
         };
 
@@ -376,10 +384,95 @@
           antarcticaInset?.close();
         }
         reset();
+        if (globeHost && viewButtons.length) {
+          const frame = host.closest(".world-frame");
+          const globeButton = viewButtons.find((button) => button.dataset.worldView === "globe");
+          const errorNote = document.createElement("p");
+          errorNote.className = "world-help";
+          errorNote.setAttribute("role", "status");
+          errorNote.hidden = true;
+          frame.before(errorNote);
+          async function setView(mode) {
+            viewMode = mode;
+            errorNote.hidden = true;
+            host.hidden = mode === "globe";
+            globeHost.hidden = mode !== "globe";
+            frame.classList.toggle("is-globe", mode === "globe");
+            viewButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.worldView === mode)));
+            countries.eachLayer((layer) => layer.closeTooltip());
+            antarcticaInset?.close();
+            if (mode === "flat") {
+              globe?.setActive(false);
+              map.invalidateSize({ pan: false });
+              status.textContent = idleStatus;
+              return;
+            }
+            globeButton.disabled = true;
+            globeHost.setAttribute("aria-busy", "true");
+            status.textContent = "Loading the globe…";
+            if (!globePromise) {
+              globeHost.textContent = "Loading the globe…";
+              // The extra projection library and spherical-ready boundaries load
+              // only after Globe is selected. The regular flat map stays light.
+              globePromise = fetch(new URL("vendor/leaflet/countries-globe.geo.json", assets), { cache: "no-cache" })
+                .then((response) => {
+                  if (!response.ok) throw new Error("Globe boundaries could not load");
+                  return response.json();
+                })
+                .then((globeGeography) => window.RustinGlobe.create({
+                  host: globeHost,
+                  geography: globeGeography,
+                  getStyle: baseStyle,
+                  getName: countryName,
+                  getDescription: (feature) => {
+                    const code = feature.properties.code;
+                    return description(code, countryName(feature)) + (breakouts.has(code) ? ". " + breakouts.get(code).hint : "");
+                  },
+                  getTooltip: (feature) => tooltipContent(feature.properties.code, countryName(feature)),
+                  onSelect(feature, opener) {
+                    const code = feature.properties.code;
+                    selectedCode = code;
+                    status.textContent = description(code, countryName(feature));
+                    if (breakouts.has(code)) {
+                      opener.setAttribute("aria-controls", breakouts.get(code).section.id);
+                      openBreakout(code, opener);
+                      globe?.closeTooltip();
+                    }
+                  },
+                  onStatus: (message) => { status.textContent = message; },
+                  reducedMotion,
+                  allowTouchToggle: !moveButton
+                }));
+            }
+            try {
+              globe = await globePromise;
+              globe.setActive(viewMode === "globe");
+              if (viewMode === "globe") {
+                globe.setTouchEnabled(moving);
+                globe.resize();
+                status.textContent = "Drag to rotate the globe. Use the mouse wheel or the + and − buttons to zoom. Arrow keys rotate; Home restores the full globe.";
+              }
+            } catch (error) {
+              globePromise = undefined;
+              globeHost.replaceChildren();
+              await setView("flat");
+              errorNote.textContent = "The globe couldn’t load. You can still use the flat map, or try Globe again.";
+              errorNote.hidden = false;
+              console.error("Travel globe could not load:", error);
+            } finally {
+              globeHost.removeAttribute("aria-busy");
+              globeButton.disabled = false;
+            }
+          }
+          viewButtons.forEach((button) => {
+            button.disabled = false;
+            button.addEventListener("click", () => setView(button.dataset.worldView));
+          });
+        }
         const resetButton = controls.querySelector("[data-reset-map]");
         if (resetButton) {
           resetButton.hidden = false;
-          resetButton.addEventListener("click", reset);
+          resetButton.addEventListener("click", () => viewMode === "globe" ? globe?.reset() : reset());
         }
         if (moveButton) {
           moveButton.hidden = false;
@@ -388,6 +481,7 @@
             moveButton.setAttribute("aria-pressed", String(moving));
             moveButton.textContent = moving ? "Done moving map" : "Move map";
             host.classList.toggle("is-moving", moving);
+            globe?.setTouchEnabled(moving);
             if (moving) { map.dragging.enable(); map.touchZoom.enable(); }
             else { map.dragging.disable(); map.touchZoom.disable(); }
           });
@@ -396,6 +490,7 @@
           if (event.key === "Escape") {
             countries.eachLayer((layer) => layer.closeTooltip());
             antarcticaInset?.close();
+            globe?.closeTooltip();
             if (moving) moveButton.click();
           }
         });
@@ -405,11 +500,17 @@
           picker.addEventListener("change", () => {
             countries.eachLayer((layer) => layer.closeTooltip());
             antarcticaInset?.close();
-            if (!picker.value) { reset(); status.textContent = idleStatus; return; }
+            if (!picker.value) {
+              if (viewMode === "globe") globe?.reset();
+              else reset();
+              status.textContent = idleStatus;
+              return;
+            }
             const code = picker.value;
             selectedCode = code;
             status.textContent = description(code, placeName(code));
             if (!regional && breakouts.has(code)) { openBreakout(code, picker); return; }
+            if (viewMode === "globe") { globe?.focusCountry(code); return; }
             if (!regional && code === "AQ") { antarcticaInset.open(true); return; }
             const layer = layers.get(code);
             if (layer) {
@@ -418,9 +519,14 @@
             }
           });
         }
+        let lastWidth = host.clientWidth;
+        let lastHeight = host.clientHeight;
         new ResizeObserver(() => {
           if (!host.clientWidth || !host.clientHeight) return;
           map.invalidateSize({ pan: false });
+          if (host.clientWidth === lastWidth && host.clientHeight === lastHeight) return;
+          lastWidth = host.clientWidth;
+          lastHeight = host.clientHeight;
           reset();
         }).observe(host);
         section.querySelector("[data-map-loading]").hidden = true;

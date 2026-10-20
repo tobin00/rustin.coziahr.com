@@ -143,3 +143,50 @@ To reproduce, download the exact source into a preparation folder, then run:
   node tools/prepare-uk-map.mjs --source C:/prep/map-units.geojson --mapshaper C:/prep/node_modules/mapshaper/bin/mapshaper
 Optional --output writes to a different file for comparison. Run npm run check
 and inspect the UK breakout at desktop and phone widths after regeneration.
+
+Globe-only country boundaries: countries-globe.geo.json
+This lazy-loaded companion comes from the existing countries.geo.json above;
+all World Atlas / Natural Earth provenance and licenses remain applicable.
+It contains the same 257 features, codes, names, and every nondegenerate
+region's exact original coordinate-value set. The Leaflet world asset remains
+untouched. Only polygon grouping, ring order/direction, redundant references,
+and the existing degenerate Vatican geometry are normalized for D3's spherical
+stream. There is no new country geography or extra simplification.
+
+The flat map uses an even-odd fill rule. Several of its nested enclave rings
+are stored as separate MultiPolygon fragments, and Russia has an invalid
+shell/hole grouping at the longitude seam. Simply reversing every outer ring
+would fill enclaves or paint the whole globe. Preparation delegates ring
+containment and winding repair to maintained mapshaper 0.6.113 routines:
+  -i countries.geo.json no-topology
+  -clean rewind allow-empty only-arcs
+  -o format=geojson gj2008 countries-globe.geo.json
+No cross-country topology, snapping, intersection cuts, gap fills, overlap
+dissolves, projection, coordinate rounding, or boundary simplification runs.
+The no-topology/only-arcs options preserve every nondegenerate region's exact
+coordinate-value set while grouping nested holes correctly. Natural Earth
+generalization and original source precision still limit geographic accuracy.
+
+Vatican's existing source ring has only two distinct collinear points and zero
+spherical area. The companion retains its VA code/name with null geometry,
+rather than inventing a shape or drawing an inverted globe-sized fill. Text
+lists and selectors can still report its visit status. All other features
+retain polygon geography.
+
+tools/prepare-globe-geography.mjs verifies identical feature properties and
+per-feature coordinate-value sets, finite geographic coordinates, closed rings,
+positive country areas smaller than a hemisphere, Lesotho and San Marino holes,
+and non-complement fills in five globe rotations using the pinned local D3
+subset. It includes a sourceSha256 field in the asset, so validation catches a
+stale globe after the original country boundaries change.
+Current source SHA-256:
+50e81c8c4849d541ba12dd4eec6fd0241c4a0effbb4c9a1e83ec70868a783381
+Current companion SHA-256:
+b56b5db61c068a15ad40206081f3cc6f3d4b9cb6d191ca5ee64b210425583f45
+Size: about 875 KB, requested only when the visitor first switches to Globe.
+
+Reproduce using the separate preparation-only mapshaper installation:
+  node tools/prepare-globe-geography.mjs --mapshaper C:/prep/node_modules/mapshaper/bin/mapshaper
+Optional --source, --d3, and --output paths support comparison/regeneration.
+Run npm run check and inspect all map views after regeneration. The local D3
+subset's source versions, licenses, and build instructions are in ../d3/.
