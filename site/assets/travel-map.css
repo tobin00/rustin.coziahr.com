@@ -6,6 +6,7 @@
 }
 .world-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2rem; }
 .world-heading .eyebrow { color: var(--world-visited); margin: 0 0 1rem; }
+.world-heading .travel-tagline { font-size: clamp(1rem, 1.6vw, 1.25rem); line-height: 1.5; letter-spacing: .04em; text-transform: none; }
 .world-stat { margin: 0; font-size: .9rem; }
 .world-stat strong { display: block; color: var(--world-visited); font-size: clamp(3rem, 6vw, 5rem); line-height: 1; letter-spacing: -.06em; }
 .world-frame { position: relative; border: 1px solid var(--world-border); background: var(--world-ocean); border-radius: .75rem; overflow: hidden; }
