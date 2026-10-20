@@ -42,13 +42,16 @@ buttons are **Find me online**, **Travel map**, and **See what I'm into**.
 ## Update the travel map
 
 Open `site/assets/travel-countries.js`. This is the only file you need to
-change for the map's visited list, count, and upcoming highlights.
+change for the world map's visited list, count, and upcoming highlights. The
+separate U.S. state and UK country lists are described below.
 
-- `visited` currently records your 66 confirmed destinations. The count says
+- `visited` currently records your 68 confirmed destinations. The count says
   **Destinations Explored** because it includes countries and separately tracked
   territories. Hong Kong (`HK`), Macau (`MO`), Taiwan (`TW`), and Puerto Rico (`PR`)
-  each have their own region. `GB` covers the United Kingdom; the map note names
-  England and Scotland. The United States (`US`) counts as one destination,
+  each have their own region. `GB` covers the United Kingdom; clicking it opens
+  a separate map with individual shapes for England, Scotland, Wales, and
+  Northern Ireland. England and Scotland are confirmed as visited.
+  The United States (`US`) counts as one destination,
   while its breakout separately shows all 50 states you have visited.
 - Your Caribbean list includes 26 countries and territories from the
   [UN Caribbean region](https://unstats.un.org/unsd/methodology/m49/overview/).
@@ -87,12 +90,12 @@ change for the map's visited list, count, and upcoming highlights.
 Refresh the local preview to see your changes, run `npm run check`, and ask
 to publish when ready. The published site changes only after publishing.
 The homepage and all four personal testing designs keep hover/tap details,
-the + and − zoom buttons at the bottom left, the U.S. state breakdown and its
-back button, the legend, and the expandable explored-place lists. The text lists provide a
+the + and − zoom buttons at the bottom left, the U.S. state and UK country
+breakdowns with back buttons, the legend, and the expandable explored-place lists. The text lists provide a
 keyboard and screen-reader alternative. These personal views use a simpler
 layout without country/state selectors, reset or “Move map” controls, or a
 visible source-credit footer. On a computer, the mouse wheel zooms when the
-pointer is over the main world or U.S. state map. Move the pointer outside the
+pointer is over the main world, U.S. state, or UK map. Move the pointer outside the
 map to scroll the page. Phone swipes still scroll the page normally; the small
 Antarctica inset does not use mouse-wheel zoom.
 
@@ -125,13 +128,34 @@ this same state list and currently shows **50 / 50**.
 The checker confirms that the all-50 milestone contains exactly the 50 states.
 Both maps share the existing Leaflet library, so there is no new runtime dependency.
 
+### England, Scotland, Wales, and Northern Ireland
+
+The separate **Across the United Kingdom** view opens when someone clicks or
+taps the United Kingdom on your world map, or uses its link in the Europe list.
+England and Scotland have their own highlighted shapes. Wales and Northern
+Ireland are shown in neutral gray as **Not yet recorded**; no visit was assumed.
+“Back to world map” or Escape returns to the world view. The UK country shapes
+support keyboard focus, and a text list provides each country's visit status.
+
+Manage these visits in `site/assets/travel-uk.js`, independently from the world
+list. Its `visited` list currently contains `GB-ENG` (England) and `GB-SCT`
+(Scotland). Add `GB-WLS` for Wales or `GB-NIR` for Northern Ireland only when a
+visit is confirmed. The UK count updates from distinct codes and currently shows
+**2 of 4 UK countries explored**. Keep `GB` in `travel-countries.js`: this still
+counts as one destination and one UN member country, so the world total stays
+at 68. These subdivisions do not become extra world destinations or change the
+continent totals. Friends' maps keep their existing country/state selections.
+
+The UK boundaries are prepared local data, loaded only when this breakout opens.
+All three maps share the existing Leaflet library; no service or key is needed.
+
 ## Friends' travel maps
 
 The homepage's **Create your own map** link opens `/maps/`. Friends enter a
 display name, choose the countries and territories they have visited, and select
 any of the 50 U.S. states. **Save map online** keeps the map on the website so
 they can return later. Selecting a state also marks the United States visited.
-This never changes your own 66-destination list in `travel-countries.js` or
+This never changes your own 68-destination list in `travel-countries.js` or
 your all-50-state list in `travel-states.js`.
 
 The `/maps/` creator and shared-map views keep their country/state selectors,

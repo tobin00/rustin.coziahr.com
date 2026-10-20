@@ -26,6 +26,7 @@ Setting up a new Windows laptop? Start with [docs/LAPTOP_SETUP.md](docs/LAPTOP_S
 - `site/assets/travel-countries.js` — visited country codes and upcoming map highlights
 - `site/assets/travel-regions.js` and `travel-stats.js` — continent groups and country totals derived from that same visited list
 - `site/assets/travel-states.js` — the separate list of all 50 visited U.S. states
+- `site/assets/travel-uk.js` — the separate list of visited UK countries, with England and Scotland confirmed
 - `site/assets/travel-map.js` and `travel-map.css` — the interactive Countries Visited map
 - `site/maps/index.html` — create, view, and update a friend's travel map
 - `site/assets/friends-map.js` and `friends-directory.js` — the map editor and friends list
@@ -66,7 +67,7 @@ At `/maps/`, friends choose countries, territories, and any of the 50 U.S. state
 then save their own map online. A public link lets others view it; a private edit
 link lets its owner return and update it. Appearing in Rustin's friends list is
 optional. Keep the private link safe: there are no accounts or recovery service.
-Rustin's own 66 destinations remain managed in `site/assets/travel-countries.js`.
+Rustin's own 68 destinations remain managed in `site/assets/travel-countries.js`.
 New upcoming destinations have a solid orange fill; return visits keep their
 visited fill with an orange outline. The United States keeps a neutral border;
 its upcoming status remains in the tooltip. Upcoming trips never add to the
@@ -76,6 +77,10 @@ a tooltip and the usual country-list and visited-count rules.
 The personal map's **Countries & continents** section separates UN member
 countries from other destinations and groups the visited list by continent.
 These totals update automatically when the visited codes change.
+Clicking the United Kingdom opens its own map of England, Scotland, Wales, and
+Northern Ireland. England and Scotland are highlighted separately; the United
+Kingdom still counts once in the world totals. This personal breakdown is managed
+in `travel-uk.js` and does not change friends' map selections.
 
 The service needs PHP 8+, PDO SQLite, and a writable private home directory.
 On the current DreamHost setup, friends' maps are stored in

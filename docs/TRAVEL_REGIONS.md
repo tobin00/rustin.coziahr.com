@@ -28,6 +28,14 @@ window.RUSTIN_REGIONS["US"]
   visited list. Planned travel never adds to any visited total. Visiting U.S.
   states does not add more countries or continents.
 
+England, Scotland, Wales, and Northern Ireland have their own shapes in the
+personal UK breakdown. England and Scotland are confirmed visited in
+`travel-uk.js`; Wales and Northern Ireland are not yet recorded. These are
+constituent countries of the United Kingdom, which retains one ISO destination
+code (`GB`) and one UN member-country count in the world totals. The separate
+**2 of 4 UK countries explored** count does not increase the 68 world destinations
+or the continent totals.
+
 This membership convention is a travel-statistics rule, not a statement about
 sovereignty, borders, or recognition. The Holy See (`VA`) and State of Palestine
 (`PS`) are not UN member states; Taiwan (`TW`), Cook Islands (`CK`), and Niue (`NU`)
@@ -66,7 +74,7 @@ a large or transcontinental country someone visited.
 
 ## Confirmed current totals
 
-Rustin's 66 distinct visited codes currently give **48 countries**, **18 other
+Rustin's 68 distinct visited codes currently give **50 countries**, **18 other
 destinations**, and **6 of 7 continents**. By primary continent:
 
 | Continent | All visited destinations |
@@ -74,7 +82,7 @@ destinations**, and **6 of 7 continents**. By primary continent:
 | Africa | 2 |
 | Antarctica | 0 |
 | Asia | 14 |
-| Europe | 16 |
+| Europe | 18 |
 | North America | 30 |
 | Oceania | 2 |
 | South America | 2 |

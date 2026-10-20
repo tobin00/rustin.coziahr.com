@@ -3,73 +3,101 @@
   let library;
   const worldSection = document.querySelector("#world");
   const overview = worldSection?.querySelector("[data-world-overview]");
-  const statesSection = document.querySelector("#united-states");
+  const breakouts = new Map([
+    ["US", { section: document.querySelector("#united-states"), title: "#states-title", hint: "Explore U.S. states" }],
+    ["GB", { section: document.querySelector("#united-kingdom"), title: "#uk-title", hint: "Explore England, Scotland, Wales & Northern Ireland" }]
+  ].filter(([, breakout]) => breakout.section));
   let worldOpener;
-  let usTrigger;
+  let activeBreakout;
 
-  function normalizeCodes(codes) {
-    if (!Array.isArray(codes)) throw new TypeError("Visited places must be an array of two-letter codes.");
-    return [...new Set(codes.map((code) => String(code).trim().toUpperCase()).filter((code) => /^[A-Z]{2}$/.test(code)))];
+  function normalizeCodes(codes, pattern = /^[A-Z]{2}$/) {
+    if (!Array.isArray(codes)) throw new TypeError("Visited places must be an array of codes.");
+    return [...new Set(codes.map((code) => String(code).trim().toUpperCase()).filter((code) => pattern.test(code)))];
   }
 
-  function openStates(opener) {
-    if (!statesSection || !overview) return;
-    worldOpener = opener || usTrigger;
+  function openBreakout(code, opener) {
+    const breakout = breakouts.get(code);
+    if (!breakout || !overview) return;
+    worldOpener = opener || breakout.trigger;
+    activeBreakout = breakout;
     overview.hidden = true;
-    statesSection.hidden = false;
+    for (const entry of breakouts.values()) {
+      entry.section.hidden = entry !== breakout;
+      entry.trigger?.setAttribute("aria-expanded", String(entry === breakout));
+    }
+    document.querySelectorAll("[data-open-uk]").forEach((button) => button.setAttribute("aria-expanded", String(code === "GB")));
     worldSection.classList.add("is-drilled-down");
-    usTrigger?.setAttribute("aria-expanded", "true");
-    statesSection.querySelector("#states-title").focus({ preventScroll: true });
+    breakout.section.querySelector(breakout.title).focus({ preventScroll: true });
     worldSection.scrollIntoView({ block: "start", behavior: "auto" });
   }
 
   function backToWorld() {
-    if (!statesSection || !overview) return;
-    statesSection.hidden = true;
+    if (!activeBreakout || !overview) return;
+    for (const breakout of breakouts.values()) {
+      breakout.section.hidden = true;
+      breakout.trigger?.setAttribute("aria-expanded", "false");
+    }
+    document.querySelectorAll("[data-open-uk]").forEach((button) => button.setAttribute("aria-expanded", "false"));
     overview.hidden = false;
     worldSection.classList.remove("is-drilled-down");
-    usTrigger?.setAttribute("aria-expanded", "false");
-    (worldOpener || usTrigger)?.focus({ preventScroll: true });
+    (worldOpener || activeBreakout.trigger)?.focus({ preventScroll: true });
+    activeBreakout = undefined;
     worldSection.scrollIntoView({ block: "start", behavior: "auto" });
   }
-  statesSection?.querySelector("[data-back-world]").addEventListener("click", backToWorld);
-  statesSection?.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      event.stopPropagation();
-      backToWorld();
-    }
+  for (const breakout of breakouts.values()) {
+    breakout.section.querySelector("[data-back-world]").addEventListener("click", backToWorld);
+    breakout.section.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        backToWorld();
+      }
+    });
+  }
+  worldSection?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-open-uk]");
+    if (button) openBreakout("GB", button);
   });
 
   function mountMap(section, settings) {
     if (!section) return;
     const config = settings.config || { visited: [], upcoming: [], showUpcoming: false };
-    const visited = new Set(normalizeCodes(config.visited || []));
+    const regional = settings.states || settings.uk;
+    const codePattern = settings.uk ? /^GB-(ENG|SCT|WLS|NIR)$/ : /^[A-Z]{2}$/;
+    const visited = new Set(normalizeCodes(config.visited || [], codePattern));
     const upcoming = new Set(config.showUpcoming ? (config.upcoming || []).map((code) => code.toUpperCase()) : []);
     const names = new Intl.DisplayNames(["en"], { type: "region" });
     const count = section.querySelector("[data-map-count]");
     const status = section.querySelector("[data-map-status]");
-    const controls = settings.states ? section : section.querySelector("[data-world-overview]") || section;
+    const controls = regional ? section : section.querySelector("[data-world-overview]") || section;
     const picker = controls.querySelector("[data-map-picker]");
     const list = section.querySelector("[data-visited-list]");
+    const ukList = section.querySelector("[data-uk-country-list]");
     const moveButton = controls.querySelector("[data-move-map]");
     const host = section.querySelector(".travel-map");
     const countLabel = section.querySelector("[data-map-count-label]");
-    if (countLabel) countLabel.textContent = settings.states ? "States Explored" : "Destinations Explored";
+    if (countLabel) countLabel.textContent = settings.uk ? "of 4 UK countries explored" : settings.states ? "States Explored" : "Destinations Explored";
     section.querySelectorAll("[data-upcoming-legend]").forEach((item) => { item.hidden = !config.showUpcoming; });
     let refreshMap;
     let placeName = (code) => {
-      const name = settings.states ? code : (code === "MO" ? "Macau" : names.of(code));
-      const note = !settings.states && config.countryNotes?.[code];
+      const name = regional ? config.names?.[code] || code : (code === "MO" ? "Macau" : names.of(code));
+      const note = !regional && config.countryNotes?.[code];
       return note ? name + " (" + note + ")" : name;
     };
     function refreshSummary() {
       count.textContent = visited.size;
       list.textContent = visited.size ? [...visited].map(placeName).sort().join(", ") :
         (config.emptyMessage || (settings.states ? "No U.S. states selected yet." : "No destinations selected yet."));
+      if (ukList) {
+        ukList.replaceChildren(...Object.entries(config.names || {}).map(([code, name]) => {
+          const item = document.createElement("li");
+          item.textContent = name + " — " + (visited.has(code) ? "Visited" : "Not yet recorded");
+          return item;
+        }));
+      }
     }
     function updateVisited(codes) {
-      const next = normalizeCodes(codes);
+      const next = normalizeCodes(codes, codePattern);
       visited.clear();
       next.forEach((code) => visited.add(code));
       refreshSummary();
@@ -99,11 +127,11 @@
             if (!response.ok) throw new Error("Country boundaries could not load");
             return response.json();
           }),
-          settings.states ? Promise.resolve(null) : fetch(new URL("vendor/leaflet/iso-codes.json", assets)).then((response) => {
+          regional ? Promise.resolve(null) : fetch(new URL("vendor/leaflet/iso-codes.json", assets)).then((response) => {
             if (!response.ok) throw new Error("Country names could not load");
             return response.json();
           }),
-          settings.states ? Promise.resolve(null) : fetch(new URL("vendor/leaflet/antarctica-polar.json", assets)).then((response) => {
+          regional ? Promise.resolve(null) : fetch(new URL("vendor/leaflet/antarctica-polar.json", assets)).then((response) => {
             if (!response.ok) throw new Error("Antarctica could not load");
             return response.json();
           })
@@ -121,27 +149,28 @@
         const palette = getComputedStyle(section);
         const color = (variable) => palette.getPropertyValue(variable).trim();
         const stateNames = new Map(geography.features.map((feature) => [feature.properties.code, feature.properties.name]));
-        if (settings.states) placeName = (code) => stateNames.get(code) || code;
+        if (regional) placeName = (code) => stateNames.get(code) || code;
         const countryCodes = catalog || [...stateNames.keys()];
         const countryName = (feature) => feature.properties.code ? placeName(feature.properties.code) : feature.properties.name;
         refreshSummary();
-        const description = (code, name) => name + " — " + (visited.has(code) ? "Visited" : "Not yet visited") + (upcoming.has(code) ? " · Upcoming" : "");
+        const visitLabel = (code) => visited.has(code) ? "Visited" : settings.uk ? "Not yet recorded" : "Not yet visited";
+        const description = (code, name) => name + " — " + visitLabel(code) + (upcoming.has(code) ? " · Upcoming" : "");
         const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const homeBounds = L.latLngBounds(settings.states ? [[-610, 0], [0, 975]] : [[-60, -180], [85, 180]]);
+        const homeBounds = settings.uk ? L.geoJSON(geography).getBounds() : L.latLngBounds(settings.states ? [[-610, 0], [0, 975]] : [[-60, -180], [85, 180]]);
         const idleStatus = "Hover or tap a " + (settings.states ? "state" : "country") + " to explore.";
         // Keep the familiar world proportions. Antarctica is shown separately
         // in a compact polar inset, leaving the main view focused on travel.
         const map = L.map(host, {
-          crs: settings.states ? L.CRS.Simple : L.CRS.EPSG4326,
-          zoomSnap: 0, zoomDelta: 0.75, minZoom: -5, maxZoom: settings.states ? 4 : 8,
+          crs: settings.uk ? L.CRS.EPSG3857 : settings.states ? L.CRS.Simple : L.CRS.EPSG4326,
+          zoomSnap: 0, zoomDelta: 0.75, minZoom: -5, maxZoom: settings.uk ? 12 : settings.states ? 4 : 8,
           scrollWheelZoom: true, wheelPxPerZoomLevel: 90,
           doubleClickZoom: false, touchZoom: false, boxZoom: false,
           dragging: false, keyboard: true, zoomAnimation: !reducedMotion,
           fadeAnimation: !reducedMotion, inertia: false, attributionControl: false,
-          maxBounds: settings.states ? homeBounds.pad(0.15) : [[-105, -200], [105, 200]], maxBoundsViscosity: 1
+          maxBounds: regional ? homeBounds.pad(0.15) : [[-105, -200], [105, 200]], maxBoundsViscosity: 1
         });
         map.zoomControl.setPosition("bottomleft");
-        host.setAttribute("aria-label", (settings.states ? "U.S. state travel map" : "World travel map") + ". Use the mouse wheel or the bottom-left plus and minus buttons to zoom; arrow keys pan. " + (picker ? "Use the selector for a text alternative." : "Explored places are listed below."));
+        host.setAttribute("aria-label", (settings.uk ? "UK constituent country travel map" : settings.states ? "U.S. state travel map" : "World travel map") + ". Use the mouse wheel or the bottom-left plus and minus buttons to zoom; arrow keys pan. " + (picker ? "Use the selector for a text alternative." : "Explored places are listed below."));
         const layers = new Map();
         let selectedCode;
         let antarcticaInset;
@@ -164,16 +193,16 @@
           const title = document.createElement("strong");
           title.textContent = name;
           const detail = document.createElement("span");
-          detail.textContent = visited.has(code) ? "Visited" : "Not yet visited";
+          detail.textContent = visitLabel(code);
           content.append(title, detail);
           if (upcoming.has(code)) {
             const note = document.createElement("span");
             note.textContent = "Upcoming";
             content.append(note);
           }
-          if (!settings.states && code === "US" && statesSection) {
+          if (!regional && breakouts.has(code)) {
             const hint = document.createElement("span");
-            hint.textContent = "Explore U.S. states →";
+            hint.textContent = breakouts.get(code).hint + " →";
             content.append(hint);
           }
           return content;
@@ -185,13 +214,13 @@
           layer.setTooltipContent(tooltipContent(code, name));
           const element = layer.getElement();
           if (!element) return;
-          element.setAttribute("aria-label", description(code, name) + (!settings.states && code === "US" && statesSection ? ". Explore U.S. states" : ""));
+          element.setAttribute("aria-label", description(code, name) + (!regional && breakouts.has(code) ? ". " + breakouts.get(code).hint : ""));
           element.classList.toggle("is-visited", visited.has(code));
           element.classList.toggle("is-upcoming", upcoming.has(code));
         }
         const countries = L.geoJSON(geography, {
           style: baseStyle,
-          filter: settings.states ? undefined : (feature) => feature.properties.code !== "AQ",
+          filter: regional ? undefined : (feature) => feature.properties.code !== "AQ",
           coordsToLatLng: settings.states ? (coords) => L.latLng(-coords[1], coords[0]) : undefined,
           onEachFeature(feature, layer) {
             const code = feature.properties.code;
@@ -203,9 +232,9 @@
               mouseout() { layer.setStyle(baseStyle(feature)); },
               click(event) {
                 antarcticaInset?.close();
-                if (!settings.states && code === "US" && statesSection) {
+                if (!regional && breakouts.has(code)) {
                   layer.closeTooltip();
-                  openStates(layer.getElement());
+                  openBreakout(code, layer.getElement());
                   return;
                 }
                 selectedCode = code;
@@ -216,18 +245,32 @@
             layer.on("add", () => {
               const element = layer.getElement();
               refreshLayer(feature, layer);
-              if (!settings.states && code === "US" && statesSection) {
-                usTrigger = element;
+              if (settings.uk) {
                 element.setAttribute("role", "button");
                 element.setAttribute("tabindex", "0");
-                element.setAttribute("aria-controls", "united-states");
-                element.setAttribute("aria-expanded", String(!statesSection.hidden));
+                element.addEventListener("keydown", (event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    selectedCode = code;
+                    status.textContent = description(code, name);
+                    layer.openTooltip(layer.getBounds().getCenter());
+                  }
+                });
+              }
+              if (!regional && breakouts.has(code)) {
+                const breakout = breakouts.get(code);
+                breakout.trigger = element;
+                element.setAttribute("role", "button");
+                element.setAttribute("tabindex", "0");
+                element.setAttribute("aria-controls", breakout.section.id);
+                element.setAttribute("aria-expanded", String(!breakout.section.hidden));
                 element.addEventListener("keydown", (event) => {
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
                     event.stopPropagation();
                     layer.closeTooltip();
-                    openStates(element);
+                    openBreakout(code, element);
                   }
                 });
               }
@@ -235,7 +278,7 @@
           }
         }).addTo(map);
 
-        if (!settings.states) {
+        if (!regional) {
           const inset = document.createElement("aside");
           inset.className = "antarctica-inset";
           inset.setAttribute("aria-label", "Antarctica inset");
@@ -354,8 +397,8 @@
             const code = picker.value;
             selectedCode = code;
             status.textContent = description(code, placeName(code));
-            if (!settings.states && code === "US" && statesSection) { openStates(picker); return; }
-            if (!settings.states && code === "AQ") { antarcticaInset.open(true); return; }
+            if (!regional && breakouts.has(code)) { openBreakout(code, picker); return; }
+            if (!regional && code === "AQ") { antarcticaInset.open(true); return; }
             const layer = layers.get(code);
             if (layer) {
               map.fitBounds(layer.getBounds(), { padding: [35, 35], maxZoom: settings.states ? 2 : 6, animate: false });
@@ -384,6 +427,7 @@
   }
   const world = mountMap(document.querySelector("#world"), { config: window.RUSTIN_TRAVEL, states: false, geography: "countries.geo.json" });
   const states = mountMap(document.querySelector("#united-states"), { config: window.RUSTIN_STATES, states: true, geography: "us-states-albers.json" });
+  mountMap(document.querySelector("#united-kingdom"), { config: window.RUSTIN_UK, uk: true, geography: "uk-countries.geo.json" });
   // Editors change their own saved data, then use this read-only rendering API.
   // The sets also update before Leaflet loads, so lazy maps show current choices.
   window.RustinMaps = {

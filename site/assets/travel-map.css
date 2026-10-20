@@ -64,7 +64,7 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
   .world-section .travel-map .leaflet-interactive { transition: none; }
 }
 
-/* U.S. states breakout uses the same map controls and each design’s palette. */
+/* Country breakouts share the map controls and each design’s palette. */
 .states-breakout { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--world-border); }
 .states-heading { margin-bottom: 1rem; }
 .states-heading h3 { margin: 0; font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1.05; letter-spacing: -.04em; }
@@ -74,6 +74,10 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 .world-section .travel-map .leaflet-interactive[role="button"]:focus-visible { outline: none; stroke: #fff; stroke-width: 3; }
 #states-map { height: clamp(320px, 52vw, 610px); }
 @media (max-width: 760px) { #states-map { height: 330px; } .states-breakout { margin-top: 3rem; padding-top: 2rem; } }
+
+/* The UK keeps a tall view so England and Scotland can be explored separately. */
+.world-section #uk-map { height: clamp(420px, 58vw, 650px); }
+@media (max-width: 760px) { .world-section #uk-map { height: 430px; } }
 
 /* COUNTRIES & CONTINENTS — personal travel totals and native disclosures. */
 .travel-breakdown { margin: 2rem 0; padding-top: 1.75rem; border-top: 1px solid var(--world-border); }
@@ -101,6 +105,8 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 .travel-counting-notes > summary { min-height: 44px; padding: .7rem 0; font-size: .85rem; font-weight: 700; cursor: pointer; }
 .travel-counting-notes p { max-width: 64rem; margin: .65rem 0; font-size: .85rem; line-height: 1.65; }
 .travel-counting-notes a { text-underline-offset: .15em; }
+.travel-place-button { min-height: 44px; padding: .2rem 0; background: transparent; color: inherit; border: 0; font: inherit; text-align: left; text-decoration: underline; text-underline-offset: .15em; cursor: pointer; }
+.travel-place-button:focus-visible { outline: 2px solid var(--world-visited); outline-offset: 3px; border-radius: .2rem; }
 .travel-breakdown summary:focus-visible, .travel-counting-notes a:focus-visible { outline: 2px solid var(--world-visited); outline-offset: 3px; border-radius: .2rem; }
 @media (min-width: 601px) and (max-width: 900px) {
   .travel-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -112,3 +112,34 @@ Coordinates retain the dataset's precomputed Albers USA projection, including
 Alaska/Hawaii insets in a 975 x 610 viewport, rounded to 0.01 projected units.
 Leaflet CRS.Simple displays these projected shapes without a new projection
 library or custom state geography. State data loads separately when approached.
+
+United Kingdom constituent countries: uk-countries.geo.json
+Public domain, Natural Earth 1:10m Admin-0 map units. The upstream theme explicitly
+separates England, Scotland, Wales, and Northern Ireland:
+https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-details/
+Pinned commit: 117488dc884bad03366ff727eca013e434615127
+Exact source file (the same source already used for the Caribbean map units):
+https://raw.githubusercontent.com/nvkelso/natural-earth-vector/117488dc884bad03366ff727eca013e434615127/geojson/ne_10m_admin_0_map_units.geojson
+SHA-256: 57da82be755f4afccd8f3b14251bb2752f5df1395f47d2d86f817470c4a48862
+
+tools/prepare-uk-map.mjs selects ADM0_A3=GBR and the four GU_A3 values ENG, SCT,
+WLS, and NIR. It retains only {code, name} properties, with the standard ISO
+3166-2 subdivision identifiers GB-ENG, GB-SCT, GB-WLS, and GB-NIR. These codes
+identify the breakout regions; they do not replace GB in the world ISO catalog.
+
+The existing preparation-only mapshaper 0.6.113 tool shares topology across the
+four source regions, explodes their 59 polygons, simplifies at 20% with
+keep-shapes, then dissolves by code. Exploding before keep-shapes preserves
+every source polygon, including Scotland's islands and Rockall. Output uses
+0.001-degree coordinate precision. It is geographic longitude/latitude GeoJSON,
+not a preprojected inset. The resulting four-feature asset is about 28 KB and
+loads only when needed. No source files, mapshaper code, or extra dependencies
+are sent to visitors. The existing Natural Earth public-domain license applies.
+
+The script verifies the exact upstream checksum, pinned tool version, region
+identities, all 59 retained polygons, finite coordinates within original bounds,
+closed rings, and nonzero island areas. The original world map is unchanged.
+To reproduce, download the exact source into a preparation folder, then run:
+  node tools/prepare-uk-map.mjs --source C:/prep/map-units.geojson --mapshaper C:/prep/node_modules/mapshaper/bin/mapshaper
+Optional --output writes to a different file for comparison. Run npm run check
+and inspect the UK breakout at desktop and phone widths after regeneration.

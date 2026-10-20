@@ -64,6 +64,20 @@
           for (const code of group.codes.sort((a, b) => placeName(a).localeCompare(placeName(b)))) {
             const item = document.createElement("li");
             item.textContent = placeName(code);
+            if (code === "GB" && document.querySelector("#united-kingdom")) {
+              const button = document.createElement("button");
+              button.type = "button";
+              button.className = "travel-place-button";
+              button.dataset.openUk = "";
+              button.setAttribute("aria-controls", "united-kingdom");
+              button.setAttribute("aria-expanded", "false");
+              button.textContent = placeName(code);
+              const hint = document.createElement("span");
+              hint.className = "travel-place-kind";
+              hint.textContent = "Explore UK countries →";
+              button.append(hint);
+              item.replaceChildren(button);
+            }
             if (!window.RUSTIN_REGIONS[code].unMember) {
               const kind = document.createElement("span");
               kind.className = "travel-place-kind";
