@@ -227,6 +227,16 @@
           }
           return content;
         }
+        function placeTooltip(tooltip) {
+          if (!tooltip?.isOpen()) return;
+          const anchor = map.latLngToContainerPoint(tooltip.getLatLng());
+          // Long details need room below countries near the map's top edge.
+          const direction = anchor.y >= tooltip.getElement().offsetHeight + 12 ? "top" : "bottom";
+          if (tooltip.options.direction !== direction) {
+            tooltip.options.direction = direction;
+            tooltip.update();
+          }
+        }
         function refreshLayer(feature, layer) {
           const code = feature.properties.code;
           const name = countryName(feature);
@@ -250,6 +260,8 @@
             layer.on({
               mouseover() { layer.setStyle({ fillOpacity: 0.8, weight: 1.8 }); },
               mouseout() { layer.setStyle(baseStyle(feature)); },
+              tooltipopen(event) { placeTooltip(event.tooltip); },
+              mousemove() { placeTooltip(layer.getTooltip()); },
               click(event) {
                 antarcticaInset?.close();
                 if (!regional && breakouts.has(code)) {
