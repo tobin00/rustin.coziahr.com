@@ -130,10 +130,12 @@ body[data-design="4"] .world-section { --world-visited: #b9231c; --world-unvisit
 }
 
 /* GLOBE VIEW — the same visited places in an optional rotating world view. */
-.world-view-switch { display: flex; flex-wrap: wrap; gap: .5rem; margin: -1rem 0 1rem; }
+.world-view-switch { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: -1rem 0 1rem; }
 .world-view-switch button { min-height: 44px; padding: .65rem 1.15rem; border: 1px solid var(--world-border); border-radius: .3rem; background: var(--world-ocean); color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
 .world-view-switch button[aria-pressed="true"] { background: var(--world-visited); border-color: var(--world-visited); color: var(--world-ocean); }
-.world-view-switch button:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: 3px; }
+.world-view-switch button:focus-visible, .world-create-link:focus-visible { outline: 3px solid var(--world-upcoming); outline-offset: 3px; }
+.world-view-switch .world-create-link { display: inline-flex; align-items: center; flex: 1 1 7rem; max-width: 14rem; min-height: 44px; padding: .25rem .5rem; color: var(--world-upcoming); font-weight: 700; line-height: 1.4; text-decoration: underline; text-underline-offset: .2em; }
+.world-create-link:hover { text-decoration-thickness: 2px; }
 .world-frame .travel-map[hidden], .travel-globe[hidden] { display: none !important; }
 .world-frame.is-globe { min-height: 0; }
 .world-frame.is-globe .antarctica-inset { display: none; }
