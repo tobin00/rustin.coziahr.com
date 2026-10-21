@@ -76,11 +76,6 @@ h2 { margin: 0; font-size: clamp(2.4rem, 6vw, 5rem); letter-spacing: -.05em; }
 .social-link { display: grid; grid-template-columns: 1fr 2fr auto; gap: 1rem; align-items: center; padding: 1.4rem 0; border-bottom: 1px solid currentColor; text-decoration: none; }
 .social-link span:first-child { font-size: 1.4rem; font-weight: 700; }.social-link span:last-child { font-size: 1.5rem; }
 .social-link.placeholder { opacity: .55; cursor: not-allowed; }
-.social-credit { display: grid; grid-template-columns: 1fr 2fr auto; gap: 1rem; padding-top: 1rem; font-size: .9rem; }
-.social-credit span { font-size: 1.4rem; font-weight: 700; }
-.social-credit .social-credit-arrow { grid-column: 3; justify-self: end; font-size: 1.5rem; }
-.social-credit a { grid-column: 2; font-weight: 700; text-decoration: none; }
-.social-credit a:hover { text-decoration: underline; }
 footer { display: flex; justify-content: space-between; gap: 2rem; padding: 3rem 0; font-size: .9rem; }
 
 /* DESIGN 1 — Night Signal. This is the initial live design. */
@@ -89,8 +84,6 @@ body[data-design="1"] .page-shell { background: radial-gradient(circle at 82% 25
 body[data-design="1"] .wordmark-mark, body[data-design="1"] .button.primary { background: #8df0c8; color: #07111f; }
 body[data-design="1"] .hero-accent { color: #8df0c8; }
 body[data-design="1"] .hobby-card { background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.16); }
-body[data-design="1"] .woodworking-card { background: #8df0c8; color: #07111f; transform: translateY(1.5rem); }
-body[data-design="1"] .woodworking-card[aria-expanded="true"] { transform: translateY(1.25rem); }
 body[data-design="1"] .woodworking-intro img, body[data-design="1"] .woodworking-slides { border: 1px solid rgba(255,255,255,.16); }
 body[data-design="1"] .woodworking-slide figcaption { background: #8df0c8; color: #07111f; }
 body[data-design="1"] .social-link { border-color: rgba(255,255,255,.25); transition: padding .25s var(--ease), color .25s; }
@@ -152,14 +145,9 @@ body[data-design="4"] .social-link:hover { color: #ed2d24; }
   .woodworking-intro { grid-template-columns: 1fr; align-items: start; }
   .woodworking-intro img { max-width: 18rem; }
   .woodworking-slides { height: 58vh; min-height: 18rem; }
-  body[data-design="1"] .woodworking-card { transform: none; }
-  body[data-design="1"] .woodworking-card[aria-expanded="true"] { transform: translateY(-.25rem); }
   body[data-design="2"] .hobby-grid { border-bottom: 0; }.hobby-card, body[data-design="2"] .hobby-card { border-right: 0; border-bottom: 2px solid; }
   body[data-design="4"] .hobby-card { grid-template-columns: 3rem 1fr; }.hobby-card > p:last-child { grid-column: 2; }
   .social-link { grid-template-columns: 1fr auto; }.social-link span:nth-child(2) { grid-row: 2; font-size: .85rem; }.social-link span:last-child { grid-column: 2; grid-row: 1 / span 2; }
-  .social-credit { grid-template-columns: 1fr auto; }
-  .social-credit a { grid-column: 1; }
-  .social-credit .social-credit-arrow { grid-column: 2; grid-row: 1 / span 2; }
   footer { flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .woodworking-slide { transition: none; } }
