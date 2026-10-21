@@ -20,7 +20,7 @@ window.RUSTIN_SITE = {
         { title: "Antarctica", icon: "🇦🇶", date: "Early 2028", description: "Antarctic Peninsula Expedition" }
       ]
     },
-    { title: "Fitness", description: "Under construction..." }
+    { title: "Fitness", description: "Under construction....", underConstruction: true }
   ],
   woodworking: {
     eyebrow: "Featured interest",

@@ -36,6 +36,15 @@ h2 { margin: 0; font-size: clamp(2.4rem, 6vw, 5rem); letter-spacing: -.05em; }
 .woodworking-card[aria-expanded="true"] { transform: translateY(-.25rem); }
 .slideshow-hint { display: flex; justify-content: space-between; margin-top: 1.25rem; font: 700 .75rem/1.2 "Space Mono", monospace; text-transform: uppercase; }
 .hobby-card h3 { margin: auto 0 .5rem; font-size: 1.7rem; }.hobby-card > p:last-child { margin: 0; line-height: 1.55; }
+/* A static construction sign for interests that are still being added. */
+.construction-notice { position: relative; display: flex; align-items: center; justify-content: center; gap: .65rem; min-width: 0; padding: 1.1rem .5rem; font-weight: 700; text-align: center; }
+.construction-notice > span:not(.construction-cone) { min-width: 0; overflow-wrap: anywhere; }
+.construction-notice::before, .construction-notice::after { content: ""; position: absolute; left: 0; right: 0; height: 6px; border-radius: 2px; background: repeating-linear-gradient(135deg, #f6c445 0 9px, #171717 9px 18px); }
+.construction-notice::before { top: 0; }
+.construction-notice::after { bottom: 0; }
+.construction-cone { position: relative; flex: 0 0 1.2rem; height: 1.6rem; }
+.construction-cone::before { content: ""; position: absolute; inset: 0 .18rem .18rem; clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); background: linear-gradient(#f28b31 0 43%, #fff8e9 43% 62%, #f28b31 62%); }
+.construction-cone::after { content: ""; position: absolute; inset: auto 0 0; height: .22rem; border-radius: 2px; background: #f28b31; }
 /* Shared travel plans, expanded with the native keyboard-accessible disclosure. */
 .hobby-card > p:has(+ .adventures) { margin: 0; line-height: 1.55; }
 .hobby-grid:has(.adventures[open]) { align-items: start; }

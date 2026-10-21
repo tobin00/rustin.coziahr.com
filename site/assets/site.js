@@ -12,7 +12,12 @@
     hobbyList.innerHTML = content.hobbies.map((hobby) => `
       <article class="hobby-card${hobby.title === "Woodworking" ? " woodworking-card" : ""}"${hobby.title === "Woodworking" ? ' role="button" tabindex="0" aria-controls="woodworking-album" aria-expanded="false"' : ""}>
         <h3>${hobby.title}</h3>
-        <p>${hobby.description}</p>
+        ${hobby.underConstruction ? `
+          <p class="construction-notice">
+            <span class="construction-cone" aria-hidden="true"></span>
+            <span>${hobby.description}</span>
+            <span class="construction-cone" aria-hidden="true"></span>
+          </p>` : `<p>${hobby.description}</p>`}
         ${hobby.adventures?.length ? `
           <details class="adventures">
             <summary><span aria-hidden="true">🌎</span> ${hobby.adventuresTitle}</summary>
