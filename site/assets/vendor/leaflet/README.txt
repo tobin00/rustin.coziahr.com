@@ -190,3 +190,44 @@ Reproduce using the separate preparation-only mapshaper installation:
 Optional --source, --d3, and --output paths support comparison/regeneration.
 Run npm run check and inspect all map views after regeneration. The local D3
 subset's source versions, licenses, and build instructions are in ../d3/.
+
+Zoom-dependent boundary detail
+Assets: countries-detail.geo.json (about 5.8 MB),
+        countries-globe-detail.geo.json (about 5.8 MB),
+        uk-countries-detail.geo.json (about 80 KB).
+These files are requested only when zoomed in. The existing overview assets,
+default map proportions, U.S. state outlines, and Antarctica inset are retained.
+Leaflet swaps coordinates in the existing paths so keyboard focus, tooltips,
+selection, colors and event handlers survive. Globe paths retain their elements
+and switch geometry at 1.8x zoom. Both views restore overview geometry on zoom-out.
+Download errors preserve the overview and can retry on a later zoom.
+Leaflet's screen-space simplification tolerance is 0.35 pixels in all main maps.
+
+World detail uses the same pinned World Atlas 2.0.2 / Natural Earth 1:10m source:
+https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-10m.json
+SHA-256: 3bc6f1d367a9bcec479841bae0e76092f512838411d0cef124e92eec4db45f79
+Caribbean map units and UK constituent countries use the exact pinned Natural
+Earth map-units source and checksum already documented above. GP/MQ islands
+are removed from France before their detailed map-unit shapes are added; BQ
+uses its three maintained source islands. All overview feature codes/names/order
+are retained, including neutral regions and Australia's grouped source pieces.
+World Atlas's degenerate Vatican outline remains as the overview fallback.
+
+Preparation uses 50% of source boundary points (versus the world's old 8% and
+UK's old 20%), shared-topology simplification, and 0.00001-degree precision.
+UK polygons are exploded before simplification and dissolved afterward to retain
+all 59 source islands/polygons. D3 geoProject normalizes the world date-line seam;
+the globe companion then uses the existing winding/enclave repair workflow.
+Natural Earth remains generalized geography; detail is not a surveyed boundary.
+
+Reproduce in a separate preparation folder containing countries-10m.json,
+map-units.geojson, and these pinned preparation-only npm packages:
+  mapshaper@0.6.113 topojson-client@3.1.0 i18n-iso-countries@7.14.0
+  d3@7.9.0 d3-geo-projection@4.0.0
+Run from the repository:
+  node tools/prepare-detailed-boundaries.mjs --prep C:/prep
+  node tools/prepare-globe-geography.mjs --mapshaper C:/prep/node_modules/mapshaper/bin/mapshaper --source site/assets/vendor/leaflet/countries-detail.geo.json --output site/assets/vendor/leaflet/countries-globe-detail.geo.json
+The detail files include sourceSha256 checks to detect stale companions.
+No preparation packages are added to the site or its runtime dependencies.
+Existing World Atlas/Natural Earth licenses cover these derived assets.
+Run npm run check and inspect zoom-in/zoom-out in flat, globe, and UK views.

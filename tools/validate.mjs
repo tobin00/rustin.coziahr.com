@@ -10,6 +10,8 @@ const required = [
   "site/assets/travel-map.js", "site/assets/travel-map.css", "site/assets/travel-countries.js",
   "site/assets/travel-globe.js", "site/assets/vendor/d3/d3-globe.min.js", "site/assets/vendor/d3/LICENSE", "site/assets/vendor/d3/README.txt",
   "site/assets/vendor/leaflet/countries-globe.geo.json",
+  "site/assets/vendor/leaflet/countries-detail.geo.json", "site/assets/vendor/leaflet/countries-globe-detail.geo.json",
+  "site/assets/vendor/leaflet/uk-countries-detail.geo.json",
   "site/assets/travel-regions.js", "site/assets/travel-stats.js",
   "site/assets/travel-states.js", "site/assets/vendor/leaflet/us-states-albers.json",
   "site/assets/travel-uk.js", "site/assets/vendor/leaflet/uk-countries.geo.json",
@@ -103,6 +105,48 @@ try {
   const globeRegion = (code) => globe.features.find((feature) => feature.properties.code === code);
   if (d3.geoContains(globeRegion("ZA"), [28.2, -29.6]) || d3.geoContains(globeRegion("IT"), [12.46, 43.94])) errors.push("The globe must preserve the Lesotho and San Marino enclaves.");
   if (!d3.geoContains(globeRegion("RU"), [37.62, 55.75]) || !d3.geoContains(globeRegion("RU"), [129.7, 62])) errors.push("The globe must include both European and Asian Russia.");
+  const pointCount = (geometry) => !geometry ? 0 : geometry.type === "Polygon" ? geometry.coordinates.flat().length : geometry.coordinates.flat(2).length;
+  const detailAssets = new Map();
+  for (const [detailName, baseName, base] of [
+    ["countries-detail.geo.json", "countries.geo.json", geography],
+    ["countries-globe-detail.geo.json", "countries-detail.geo.json", null],
+    ["uk-countries-detail.geo.json", "uk-countries.geo.json", ukGeography],
+  ]) {
+    const detail = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet", detailName), "utf8"));
+    const reference = base || detailAssets.get(baseName);
+    const hash = createHash("sha256").update(await readFile(path.join(repo, "site/assets/vendor/leaflet", baseName))).digest("hex");
+    if (detail.sourceSha256 !== hash) errors.push(`${detailName}: regenerate detail after its source changes.`);
+    if (JSON.stringify(detail.features.map((feature) => feature.properties)) !== JSON.stringify(reference.features.map((feature) => feature.properties))) errors.push(`${detailName}: detail must preserve every destination and name in order.`);
+    for (const feature of detail.features) {
+      const code = feature.properties.code;
+      if (!feature.geometry) {
+        if (!(detailName.includes("globe") && code === "VA")) errors.push(`${detailName}: missing geometry for ${code}.`);
+        continue;
+      }
+      const rings = feature.geometry.type === "Polygon" ? feature.geometry.coordinates : feature.geometry.coordinates.flat();
+      for (const ring of rings) {
+        if (ring.length < 4 || JSON.stringify(ring[0]) !== JSON.stringify(ring.at(-1))) errors.push(`${detailName}: an open ring in ${code}.`);
+        if (ring.some(([x, y]) => !Number.isFinite(x) || !Number.isFinite(y) || Math.abs(x) > 180.00001 || Math.abs(y) > 90)) errors.push(`${detailName}: invalid coordinates in ${code}.`);
+        if (!detailName.includes("globe") && ring.slice(1).some((point, index) => Math.abs(point[0] - ring[index][0]) > 180.00001)) errors.push(`${detailName}: a line crosses the world in ${code}.`);
+      }
+      if (detailName.includes("globe")) {
+        const area = d3.geoArea(feature);
+        if (!Number.isFinite(area) || area <= 0 || area >= 2 * Math.PI) errors.push(`${detailName}: invalid globe fill in ${code}.`);
+      }
+    }
+    detailAssets.set(detailName, detail);
+  }
+  for (const code of ["NO", "JP", "CL"]) {
+    const detailed = detailAssets.get("countries-detail.geo.json").features.find((feature) => feature.properties.code === code);
+    const original = geography.features.find((feature) => feature.properties.code === code);
+    if (pointCount(detailed.geometry) < pointCount(original.geometry) * 3) errors.push(`${code}: zoomed boundaries must have substantially more detail.`);
+  }
+  const ukDetail = detailAssets.get("uk-countries-detail.geo.json");
+  const ukPolygons = ukDetail.features.reduce((sum, feature) => sum + (feature.geometry.type === "Polygon" ? 1 : feature.geometry.coordinates.length), 0);
+  if (ukPolygons !== 59) errors.push("Detailed UK boundaries must retain all 59 source islands/polygons.");
+  const detailedGlobe = (code) => detailAssets.get("countries-globe-detail.geo.json").features.find((feature) => feature.properties.code === code);
+  if (d3.geoContains(detailedGlobe("ZA"), [28.2, -29.6]) || d3.geoContains(detailedGlobe("IT"), [12.46, 43.94])) errors.push("Detailed globe must preserve enclave holes.");
+  if (!d3.geoContains(detailedGlobe("RU"), [37.62, 55.75]) || !d3.geoContains(detailedGlobe("RU"), [129.7, 62])) errors.push("Detailed globe must retain both sides of Russia.");
   const polar = JSON.parse(await readFile(path.join(repo, "site/assets/vendor/leaflet/antarctica-polar.json"), "utf8"));
   if (polar.projection !== "South Pole" || !Array.isArray(polar.viewport) || polar.viewport.length !== 2 || polar.viewport.some((value) => !Number.isFinite(value) || value <= 0)) errors.push("Antarctica needs a valid prepared polar viewport.");
   if (polar.features.length !== 1 || polar.features[0].properties.code !== "AQ" || !polar.features[0].geometry) errors.push("The polar inset must contain Antarctica only.");

@@ -23,6 +23,10 @@
     if (!host || !Array.isArray(geography?.features)) throw new TypeError("The globe needs a container and country boundaries.");
     const d3 = await loadLibrary();
     const features = geography.features;
+    const overviewGeometry = features.map((feature) => feature.geometry);
+    let detailedGeography;
+    let detailLoading = false;
+    let showingDetail = false;
     const palette = getComputedStyle(host);
     const color = (name) => palette.getPropertyValue(name).trim();
     const initialRotation = [35, -20, 0];
@@ -99,6 +103,7 @@
 
     function paint() {
       if (!active || !width || !height || host.hidden || !host.clientWidth || !host.clientHeight) return;
+      updateBoundaryDetail();
       projection.scale(baseRadius * scale).translate([width / 2, height / 2]);
       ocean.attr("d", path(sphere)).attr("fill", color("--world-ocean")).attr("stroke", color("--world-border"));
       grid.attr("d", path(graticule)).attr("stroke", color("--world-border"));
@@ -119,6 +124,23 @@
       });
       controls.querySelector("[data-globe-zoom-out]").disabled = scale <= 0.8501;
       controls.querySelector("[data-globe-zoom-in]").disabled = scale >= 4.9999;
+    }
+
+    function updateBoundaryDetail() {
+      if (scale >= 1.8 && !detailedGeography && !detailLoading && options.loadDetail) {
+        detailLoading = true;
+        options.loadDetail().then((data) => { detailedGeography = data; schedulePaint(); })
+          .catch((error) => console.warn("Keeping the overview globe boundaries:", error))
+          .finally(() => { detailLoading = false; });
+      }
+      const next = Boolean(detailedGeography && scale >= 1.8);
+      if (next !== showingDetail) {
+        features.forEach((feature, index) => {
+          feature.geometry = next ? detailedGeography.features[index].geometry : overviewGeometry[index];
+        });
+        showingDetail = next;
+      }
+      host.dataset.boundaryDetail = next ? "detailed" : "overview";
     }
 
     function schedulePaint() {

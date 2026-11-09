@@ -135,6 +135,16 @@ API key, map tiles, or visitor CDN calls.
 The map assets load only as a visitor approaches the section. Provenance and
 licenses are in `site/assets/vendor/leaflet/`. Keep those files intact.
 
+Zooming in automatically loads more detailed coastline and border outlines.
+The flat world map switches at zoom level 2.5; the globe switches at 1.8 times
+its starting size. The UK breakout switches after zooming in one step. Zooming
+back out restores the lighter outlines, and a failed detail download leaves
+the overview map usable. Details preserve the same places, colors, counts,
+and controls. U.S. states already retain their source's full boundary detail.
+These are travel-map outlines, not street-level or survey boundaries.
+Preparation instructions for the separate detail assets are in the same
+vendor README. Do not replace the overview data with the larger detail files.
+
 The separate **Across the United States** breakout uses
 `site/assets/travel-states.js`. All 50 state postal codes are listed as visited,
 and this breakout stays hidden until someone clicks or taps the United States

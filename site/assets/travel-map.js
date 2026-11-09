@@ -1,6 +1,24 @@
 (function () {
   const assets = new URL(".", document.currentScript.src);
   let library;
+  const detailRequests = new Map();
+  function loadBoundaryDetail(filename, overview) {
+    if (!detailRequests.has(filename)) {
+      const request = fetch(new URL("vendor/leaflet/" + filename, assets), { cache: "no-cache" })
+        .then((response) => {
+          if (!response.ok) throw new Error("Detailed boundaries could not load");
+          return response.json();
+        }).then((data) => {
+          if (data.type !== "FeatureCollection" || data.features?.length !== overview.features.length
+            || data.features.some((feature, index) => JSON.stringify(feature.properties) !== JSON.stringify(overview.features[index].properties))) {
+            throw new Error("Detailed boundaries do not match the map's destinations");
+          }
+          return data;
+        }).catch((error) => { detailRequests.delete(filename); throw error; });
+      detailRequests.set(filename, request);
+    }
+    return detailRequests.get(filename);
+  }
   const worldSection = document.querySelector("#world");
   const overview = worldSection?.querySelector("[data-world-overview]");
   const breakouts = new Map([
@@ -250,6 +268,7 @@
         }
         const countries = L.geoJSON(geography, {
           style: baseStyle,
+          smoothFactor: 0.35,
           filter: regional ? undefined : (feature) => feature.properties.code !== "AQ",
           coordsToLatLng: settings.states ? (coords) => L.latLng(-coords[1], coords[0]) : undefined,
           onEachFeature(feature, layer) {
@@ -309,6 +328,44 @@
             });
           }
         }).addTo(map);
+
+        let detailedGeography;
+        let detailLoading = false;
+        let showingDetail = false;
+        const overviewGeometry = new Map();
+        countries.eachLayer((layer) => overviewGeometry.set(layer, layer.getLatLngs()));
+        const detailedGeometry = new Map();
+        function wantsDetail() {
+          return !settings.states && map.getZoom() >= (settings.uk ? map.getMinZoom() + 0.75 : 2.5);
+        }
+        function applyBoundaryDetail() {
+          const next = Boolean(detailedGeography && wantsDetail());
+          if (next === showingDetail) return;
+          // Update coordinates in place: keep the same paths, keyboard focus,
+          // selection, tooltip bindings, colors, and breakout controls.
+          countries.eachLayer((layer) => {
+            if (next && !detailedGeometry.has(layer)) {
+              const feature = detailedGeography.features.find((entry) =>
+                JSON.stringify(entry.properties) === JSON.stringify(layer.feature.properties));
+              const detailedLayer = L.geoJSON(feature).getLayers()[0];
+              detailedGeometry.set(layer, detailedLayer.getLatLngs());
+            }
+            layer.setLatLngs((next ? detailedGeometry : overviewGeometry).get(layer));
+          });
+          showingDetail = next;
+          host.dataset.boundaryDetail = next ? "detailed" : "overview";
+        }
+        function updateBoundaryDetail() {
+          if (wantsDetail() && !detailedGeography && !detailLoading) {
+            detailLoading = true;
+            loadBoundaryDetail(settings.uk ? "uk-countries-detail.geo.json" : "countries-detail.geo.json", geography)
+              .then((data) => { detailedGeography = data; applyBoundaryDetail(); })
+              .catch((error) => console.warn("Keeping the overview map boundaries:", error))
+              .finally(() => { detailLoading = false; });
+          }
+          applyBoundaryDetail();
+        }
+        host.dataset.boundaryDetail = "overview";
 
         if (!regional) {
           const inset = document.createElement("aside");
@@ -396,6 +453,8 @@
           antarcticaInset?.close();
         }
         reset();
+        map.on("zoomend", updateBoundaryDetail);
+        updateBoundaryDetail();
         if (globeHost && viewButtons.length) {
           const frame = host.closest(".world-frame");
           const globeButton = viewButtons.find((button) => button.dataset.worldView === "globe");
@@ -434,6 +493,7 @@
                 .then((globeGeography) => window.RustinGlobe.create({
                   host: globeHost,
                   geography: globeGeography,
+                  loadDetail: () => loadBoundaryDetail("countries-globe-detail.geo.json", globeGeography),
                   getStyle: baseStyle,
                   getName: countryName,
                   getDescription: (feature) => {
