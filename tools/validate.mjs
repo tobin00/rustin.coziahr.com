@@ -193,6 +193,55 @@ try {
   errors.push(`Travel map check: ${error.message}`);
 }
 
+// Exercise the real homepage script without making requests to Google.
+// In particular, private map links must never be collected by Analytics.
+try {
+  const contentSource = await readFile(path.join(repo, "site/assets/content.js"), "utf8");
+  const siteSource = await readFile(path.join(repo, "site/assets/site.js"), "utf8");
+  function analyticsPreview(url, measurementId) {
+    const scripts = [];
+    const context = {
+      window: {}, URL, location: new URL(url),
+      requestAnimationFrame: () => {},
+      document: {
+        referrer: "https://example.com/private?edit=private-referrer#secret",
+        querySelector: () => null, querySelectorAll: () => [],
+        getElementById: () => null, createElement: () => ({}),
+        head: { append: (script) => scripts.push(script) }
+      }
+    };
+    runInNewContext(contentSource, context);
+    if (measurementId !== undefined) context.window.RUSTIN_SITE.analytics.measurementId = measurementId;
+    runInNewContext(siteSource, context);
+    return { scripts, measurementId: context.window.RUSTIN_SITE.analytics?.measurementId, calls: (context.window.dataLayer || []).map((args) => Array.from(args)) };
+  }
+  for (const page of ["/", "/index.html"]) {
+    const { scripts, calls, measurementId } = analyticsPreview(`https://rustin.coziahr.com${page}?edit=private-query#private-fragment`);
+    if (measurementId === "") {
+      if (scripts.length || calls.length) errors.push("An empty measurement ID must disable Analytics.");
+      continue;
+    }
+    const config = calls.find(([command]) => command === "config");
+    if (scripts.length !== 1 || scripts[0].src !== `https://www.googletagmanager.com/gtag/js?id=${measurementId}` || !scripts[0].async || scripts[0].referrerPolicy !== "origin") errors.push("The live homepage must load its Analytics tag asynchronously without leaking URL parameters in the request referrer.");
+    if (!config || config[2].page_location !== "https://rustin.coziahr.com/" || config[2].page_referrer !== "https://example.com" || JSON.stringify(calls).includes("private-")) errors.push("Analytics must omit private query strings, fragments, and referrer paths.");
+    if (config?.[2].allow_google_signals !== false || config?.[2].allow_ad_personalization_signals !== false) errors.push("Analytics advertising features must stay disabled.");
+  }
+  for (const url of [
+    "http://127.0.0.1:4173/", "http://localhost:4173/", "http://rustin.coziahr.com/",
+    "https://rustin.coziahr.com/testing/", "https://rustin.coziahr.com/maps/?edit=private-link",
+    ...[1, 2, 3, 4].map((number) => `https://rustin.coziahr.com/testing/options/${number}/`),
+    "https://rustin.coziahr.com.example.com/"
+  ]) {
+    const { scripts, calls } = analyticsPreview(url);
+    if (scripts.length || calls.length) errors.push(`Analytics must not run on ${url.split("?")[0]}`);
+  }
+  for (const invalidId of ["", "not-a-measurement-id"]) {
+    if (analyticsPreview("https://rustin.coziahr.com/", invalidId).scripts.length) errors.push("An empty or invalid measurement ID must disable Analytics.");
+  }
+} catch (error) {
+  errors.push(`Analytics check: ${error.message}`);
+}
+
 if (errors.length) {
   console.error("Site check failed:\n- " + errors.join("\n- "));
   process.exit(1);

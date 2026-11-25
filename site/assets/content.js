@@ -5,6 +5,12 @@ window.RUSTIN_SITE = {
   lastName: " Coziahr",
   intro: "A place for the things I’m making, playing, learning, and enjoying along the way.",
   footer: "Made with curiosity and probably revised a few times.",
+  // Public Google Analytics identifier; this does not grant access to reports.
+  analytics: { measurementId: "G-SJ29CLG8YR" },
+  mapGuarantee: {
+    message: "The Coziahr family will hold Coziahr.com in perpetuity, and your map will always be available here.",
+    signature: "That’s the old Coziahr guarantee."
+  },
   hobbies: [
     { title: "Woodworking", description: "Live-edge slabs, boards, shop projects, and pieces shaped by hand." },
     {

@@ -7,6 +7,21 @@
     if (typeof value === "string") element.textContent = value;
   });
 
+  if (content.mapGuarantee) {
+    document.querySelectorAll(".map-create-panel > div, .map-page-intro").forEach((invitation) => {
+      const guarantee = document.createElement("div");
+      guarantee.className = "map-guarantee";
+      const message = document.createElement("p");
+      message.textContent = content.mapGuarantee.message;
+      const signature = document.createElement("p");
+      const signatureText = document.createElement("strong");
+      signatureText.textContent = content.mapGuarantee.signature;
+      signature.append(signatureText);
+      guarantee.append(message, signature);
+      invitation.append(guarantee);
+    });
+  }
+
   const hobbyList = document.querySelector('[data-list="hobbies"]');
   if (hobbyList) {
     hobbyList.innerHTML = content.hobbies.map((hobby) => `
@@ -130,5 +145,30 @@
   if (initialAnchor) requestAnimationFrame(() => {
     if (location.hash === initialAnchor) document.getElementById(initialAnchor.slice(1))?.scrollIntoView({ behavior: "instant", block: "start" });
   });
+
+  // Count only the published homepage, never local previews, testing designs,
+  // or friends' maps (which can contain private editing links).
+  const measurementId = content.analytics?.measurementId;
+  if (location.origin === "https://rustin.coziahr.com" &&
+      ["/", "/index.html"].includes(location.pathname) &&
+      /^G-[A-Z0-9]+$/.test(measurementId || "")) {
+    let referrer = "";
+    try { referrer = new URL(document.referrer).origin; } catch { /* No valid referrer. */ }
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    window.gtag("js", new Date());
+    window.gtag("config", measurementId, {
+      page_location: "https://rustin.coziahr.com/",
+      page_referrer: referrer,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
+    const analyticsScript = document.createElement("script");
+    analyticsScript.async = true;
+    analyticsScript.referrerPolicy = "origin";
+    analyticsScript.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.append(analyticsScript);
+  }
 })();
 

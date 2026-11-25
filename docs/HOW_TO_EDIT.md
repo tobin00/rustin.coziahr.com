@@ -242,6 +242,28 @@ the repository root, which is excluded from Git. A helper can set the server's
 service rejects storage inside the public website. Keep databases, private edit
 links, and backups out of `site/` and out of Git.
 
+## Private visitor counts
+
+Google Analytics is prepared for the homepage under the account **Rustin's website**
+and property **rustin.coziahr.com**. Open [Google Analytics](https://analytics.google.com/)
+with the Google account used during setup, choose that property, and use **Reports**
+to see visitors and page views. **Realtime** shows recent activity. The reports are
+available to authorized Analytics users; no public counter appears on the webpage.
+
+The public measurement identifier is in `site/assets/content.js`, under `analytics`.
+It identifies the destination for counts and does not provide access to reports.
+Set `measurementId` to an empty string to disable the tag on the next deployment.
+The shared script loads Google Analytics only on the HTTPS live homepage (`/` and
+`/index.html`). Local previews, all testing designs, and friends' map pages are
+excluded. Page addresses omit query strings and fragments, and referrers contain
+only their origin, so private map editing links are not included. Advertising
+personalization and Google signals are disabled by the website code.
+
+Counts begin after this change is published; past visits cannot be reconstructed
+from the new tag. Page views include reloads and your own visits. Visitor totals
+are estimates and may miss browsers that block Analytics. Run `npm run check`
+before publishing; it also verifies the tracking exclusions and URL cleanup.
+
 ## Important safety notes
 
 - Never paste passwords, private keys, or account recovery codes into the website files.
